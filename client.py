@@ -9,6 +9,7 @@
 import os, time, threading, signal, logging
 import sys
 import redis
+from rediscluster import StrictRedisCluster
 
 logging.basicConfig(level=logging.DEBUG, format='[%(levelname)s] (%(threadName)-10s) %(message)s',)
 
@@ -50,6 +51,21 @@ def threadedClient( cid, clients ):
             print v,
         print "end"
 
+def threadedClientWithCluster( cid, clients ):
+    hclients = [ { 'host' : c[0], 'port' : c[1] } for c in clients ]
+    credis= StrictRedisCluster( startup_nodes=hclients )
+
+    logging.debug( 'client %d connected to redis servers %s' % (cid, hclients) )
+    count = 0
+    while True:
+        time.sleep( 1 )
+        count+=1
+        print 'client: %d, servers value are ' % (cid,),
+        credis.set( cid, count )
+        v = credis.get( cid )
+        print v,
+        print "end"
+
 def main():
     logging.debug( "Hello %s %s" % ( sys.argv[1], sys.argv[2] ) )
     os.setpgrp()    # create new proc group, become its leader
@@ -75,7 +91,7 @@ def main():
         """
 
         for i in range( int( sys.argv[1] ) ):
-            newthread = threading.Thread( target=threadedClient, args=(i,redisServers) )
+            newthread = threading.Thread( target=threadedClientWithCluster, args=(i,redisServers) )
             newthread.start()
 
         logging.debug( "KILL after %s seconds !!!!!" % sys.argv[2] )
