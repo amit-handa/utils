@@ -21,6 +21,7 @@
 ## cluster
 
 * Multiple database options is not supported if cluster is enabled.
+* Operations across multiple keys spread across nodes are not supported.
 * Each master can have multiple slaves. In case, master goes down, cluster shall promote one of the slave automatically.
 * There are 16384 hash slots to which all the keys are assigned to. They are partitioned amongst the master nodes.
 * For the cluster to be functional, all the hash slots should be available. If its not, cluster shall cease to honour read/writes.
@@ -52,6 +53,22 @@
 	- its steps are also a bit tedious
 
 * Since, above process is cumbersome, redis offers redis-trib.rb(ruby script) to do it automatically
+	- create cluster
+	redis-trib.rb create --replicas 1 host-ip-1:port1 host-ip-2:port2 host-ip-3:port3 host-ip-4:port4 host-ip-5:port5 host-ip-6:port6
+	- migrate slots, followed by Q&A
+	redis-trib.rb reshard
+	- del a node
+	redis-trib.rb del-node <any-cluster-master> <node-id>
+	- add a node (make sure, its empty, cluster nodes are empty etc)
+	redis-trib.rb add-node new-host-ip:port <any-cluster-master>
+	- rebalance the slots amongst the masters
+	redis-trib.rb rebalance --use-empty-masters <any-cluster-master>
+
+### Make a cluster node slave
+
+```
+cluster replicate <master-node-id>
+```
 
 * **references**
 	- http://redis.io/topics/cluster-tutorial
