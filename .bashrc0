@@ -1,0 +1,92 @@
+PS1='\[\033[1;31m\]\H@\W/\[\033[0m\] '
+
+##### DEFAULTS #####
+
+# If not running interactively, don't do anything
+[ -z "$PS1" ] && return
+
+PROMPT_COLOR='35;1m'
+
+export HISTCONTROL=ignoreboth
+export EDITOR="vim"
+export VISUAL="vim"
+
+#shopt -s histappend
+#shopt -s checkwinsize
+
+# Make less more friendly for non-text input files, see lesspipe(1)
+[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+
+# Set variable identifying the chroot you work in (used in the prompt below)
+#if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
+#    debian_chroot=$(cat /etc/debian_chroot)
+#fi
+
+# Color prompt
+force_color_prompt=yes
+
+# enable programmable completion features (you don't need to enable
+# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+# sources /etc/bash.bashrc).
+#if [ -f /etc/bash_completion ]; then
+#    . /etc/bash_completion
+#fi
+
+export M2_HOME=~/tools/maven
+export PATH=~/tools/bin:~/tools/vertx/bin:~/tools/mongodb/bin:~/tools/activemq/bin:$M2_HOME/bin:~/tools/tomcat/bin:$PATH
+
+#export JAVA_OPTS='-Xmx5000M -Xms5000M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC'
+export JAVA_HOME=/usr/lib/jvm/default-java
+export GOROOT=$HOME/projects
+export GOPATH=$HOME/tools
+
+#$systemctl status firewalld.service
+#$nmap -sT -O 192.168.1.18
+
+set bind-tty-special-chars Off
+
+bind "set completion-ignore-case on"
+bind '"\C-w": backward-kill-word'
+bind '"\ep": history-search-backward'
+bind '"\en": history-search-forward'
+export LC_ALL=C
+
+alias ls='ls --color'
+alias redis-cli='rlwrap -a -- redis-cli'
+alias mongo-cli='rlwrap -a -- mongo'
+
+export GOOGLE_PLACES_API_KEY="AIzaSyB8bR0Y51J96peJs8-OLX7y8OPb_IO-juw"
+export GOOGLE_PLACES_OUTPUT_FORMAT="json"
+
+#java -classpath "target/noty-1.0.0.jar:/home/akhanda/tools/vertx/mods/com.ahanda.techops~noty~1.0.0/lib/*:/home/akhanda/tools/vert.x-2.0.2-final/lib/*" $JAVA_OPTS com.ahanda.techops.noty.ds.EventCache2
+
+export NVM_DIR="/home/gamihan/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+
+SSH_ENV="$HOME/.ssh/environment"
+
+function start_agent {
+    echo "Initialising new SSH agent..."
+    /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
+    echo succeeded
+    chmod 600 "${SSH_ENV}"
+    . "${SSH_ENV}" > /dev/null
+    /usr/bin/ssh-add;
+}
+
+# Source SSH settings, if applicable
+
+if [ -f "${SSH_ENV}" ]; then
+    . "${SSH_ENV}" > /dev/null
+    #ps ${SSH_AGENT_PID} doesn't work under cywgin
+    ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
+        start_agent;
+    }
+else
+    start_agent;
+fi
+
+# echo "helllllo dear" | mailx -v -s "hello amit" -S smtp-use-starttls -S smtp="smtp.gmail.com" -S smtp-auth=login -S smtp-auth-user="amit.handa@geminisolutions.in" -S smtp-auth-password="81@mit06" -S from="amit.handa@geminisolutions.in(amit)" amit.handa@gmail.com
+#/usr/bin/ffmpeg -i PB045265.AVI -c:v libx264 -crf 20 -pix_fmt yuv420p -x264-params keyint=240:min-keyint=20 -preset:v slow -profile:v baseline -level 3.0 -c:a aac -b:a 160k -vbr 4 -strict -2 PB045265.AVI.mp4
+export PYTHONSTARTUP=~/.startup.py
+#rsync -rvlc -e 'ssh -p 2222' ../Music/ 192.168.15.2:SDCard/
