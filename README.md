@@ -89,3 +89,4 @@ cluster replicate <master-node-id>
 
 ## References
 - [documentation](http://redis.io/documentation)
+- [consistency-check script](https://github.com/antirez/redis-rb-cluster.git)

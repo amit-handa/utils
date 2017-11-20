@@ -1,13 +1,15 @@
-execute pathogen#infect()
+"execute pathogen#infect()
+
 let g:molokai_original = 1
 let g:SimpylFold_docstring_preview=1
 let g:ycm_autoclose_preview_window_after_completion=1
+let g:nerdtree_tabs_open_on_console_startup = 1
+let NERDTreeIgnore=['\.pyc$', '\~$'] "ignore files in NERDTree
+
 let mapleader=","
 
 autocmd vimenter * NERDTree
-let NERDTreeIgnore=['\.pyc$', '\~$'] "ignore files in NERDTree
 map <C-n> :NERDTreeToggle<CR>
-
 map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
 " set the runtime path to include Vundle and initialize
@@ -23,14 +25,15 @@ Plugin 'gmarik/Vundle.vim'
 " Add all your plugins here (note older versions of Vundle used Bundle instead of Plugin)
 Plugin 'tmhedberg/SimpylFold'
 Plugin 'vim-scripts/indentpython.vim'
-Plugin 'Valloric/YouCompleteMe'
+"Plugin 'Valloric/YouCompleteMe'
 Plugin 'scrooloose/nerdtree'
 Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'kien/ctrlp.vim'
 Plugin 'tpope/vim-fugitive'
-Plugin 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
+"Plugin 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
 Plugin 'jnurmine/Zenburn'
 Plugin 'altercation/vim-colors-solarized'
+"Plugin 'elixir-lang/vim-elixir'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -65,11 +68,11 @@ nnoremap <space> za
 "    \ set softtabstop=4
 "    \ set shiftwidth=4
 "    \ set textwidth=79
-"    \ set expandtab
+"    \ set noexpandtab
 "    \ set autoindent
 "    \ set fileformat=unix
 
-au BufNewFile,BufRead *.js, *.html, *.css
+au BufNewFile *.js, *.html, *.css
     \ set tabstop=2
     \ set softtabstop=2
     \ set shiftwidth=2
@@ -87,49 +90,24 @@ set encoding=UTF-8
 "  execfile(activate_this, dict(__file__=activate_this))
 "EOF
 
-:se tags=./tags
-function Filetype_c()
-    if (! filereadable('Makefile'))
-        set makeprg=g\ %
-    endif
-endfunction
-
-function Filetype_cpp()
-    if (! filereadable('Makefile'))
-        set makeprg=n\ %
-    endif
-endfunction
-
-function Filetype_perl()
-    setlocal cindent
-endfunction
-
-function Filetype_ml()
-    setlocal shiftwidth=2
-    setlocal softtabstop=2
-endfunction
-
-function Filetype_tex()
-    if (! filereadable('Makefile'))
-        set makeprg=latex\ %
-    endif
-endfunction
-
-if (v:version >= 600)
-    filetype plugin indent on
-    nmap <F13> :call BE()<CR>
-    highlight! link Folded StatusLine
-
-    function BE()
-        if ! exists('b:folding')
-            syntax region myFold start='{' end='}' transparent fold
-            syntax sync fromstart
-            set foldmethod=syntax
-            set foldlevel=1
-            normal zR
-        endif
-    endfunction
-endif
+" move upwards if tags not found
+:se tags=tags,~/tags;/
+" not working due to python indentation, commenting
+"if (v:version >= 600)
+"    filetype plugin indent on
+"    nmap <F13> :call BE()<CR>
+"    highlight! link Folded StatusLine
+"
+"    function BE()
+"        if ! exists('b:folding')
+"            syntax region myFold start='{' end='}' transparent fold
+"            syntax sync fromstart
+"            set foldmethod=syntax
+"            set foldlevel=1
+"            normal zR
+"        endif
+"    endfunction
+"endif
 
 set nocompatible " dont be compatible with vi-mode
 set noautoindent
@@ -173,18 +151,9 @@ set nowritebackup
 
 autocmd BufEnter *              let &titlestring = hostname() . ':' . expand('%f')
 
-autocmd FileType c              call Filetype_c()
-autocmd FileType cpp            call Filetype_cpp()
 autocmd FileType help           nmap <C-m> <C-]>
 autocmd FileType html           setlocal indentkeys-=o,O,*<Return>,<>>,<bs>
 autocmd FileType mail           setlocal textwidth=76
-autocmd FileType html           call Filetype_ml()
-autocmd FileType javascript     call Filetype_ml()
-autocmd FileType java			call Filetype_ml()
-autocmd FileType xml            call Filetype_ml()
-autocmd FileType ocaml          call Filetype_ml()
-autocmd FileType css            call Filetype_ml()
-autocmd FileType tex            call Filetype_tex()
 
 autocmd BufRead *.*html*        setlocal filetype=html
 autocmd BufRead *.css*          setlocal filetype=css
@@ -209,10 +178,8 @@ nmap <F14>      :qall<CR>
 nmap <F5>       :set hlsearch!<CR>
 nmap <F15>      :set ignorecase!<CR>
 nmap <F16>      :set makeprg=nn\ %<CR>
-set pastetoggle=<F7>
 nmap <F17>      :set makeprg=gg\ %<CR>
 nmap <F8>       <C-w>w
-nmap <F18>      <C-w>_
 
 let python_highlight_all=1
 syntax on
@@ -222,5 +189,11 @@ set t_co=256
 map mn :tabnext<CR>
 map mb :tabprev<CR>
 set cursorline
+set pastetoggle=<F7>
 highlight CursorLine	cterm=underline
 highlight Visual cterm=reverse term=reverse
+
+set tabstop=4
+set noexpandtab
+" zM : close all folds, zR : open all folds
+set mouse=a	" enable mouse
