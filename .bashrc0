@@ -55,9 +55,6 @@ alias ls='ls --color'
 alias redis-cli='rlwrap -a -- redis-cli'
 alias mongo-cli='rlwrap -a -- mongo'
 
-export GOOGLE_PLACES_API_KEY="AIzaSyB8bR0Y51J96peJs8-OLX7y8OPb_IO-juw"
-export GOOGLE_PLACES_OUTPUT_FORMAT="json"
-
 #java -classpath "target/noty-1.0.0.jar:/home/akhanda/tools/vertx/mods/com.ahanda.techops~noty~1.0.0/lib/*:/home/akhanda/tools/vert.x-2.0.2-final/lib/*" $JAVA_OPTS com.ahanda.techops.noty.ds.EventCache2
 
 export NVM_DIR="/home/gamihan/.nvm"
@@ -113,7 +110,7 @@ log_bash_persistent_history()
   local command_part="${BASH_REMATCH[2]}"
   if [ "$command_part" != "$PERSISTENT_HISTORY_LAST" ]
   then
-    echo $date_part "|" "$command_part" >> ~/.persistent_history
+    echo $date_part "$command_part" >> ~/.persistent_history
     export PERSISTENT_HISTORY_LAST="$command_part"
   fi
 }
@@ -125,3 +122,5 @@ run_on_prompt_command()
 }
 
 PROMPT_COMMAND="run_on_prompt_command"
+# ldapsearch -x -h 10.10.20.14 -D "gemsol\\am.handa" -W -b "cn=gemini,dc=gemsol,dc=in" -s sub "(cn=*)" cn mail sn
+export GRADLE_HOME=/home/amit/tools/gradle
