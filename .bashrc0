@@ -37,7 +37,7 @@ export PATH=~/tools/bin:~/tools/vertx/bin:~/tools/mongodb/bin:~/tools/activemq/b
 
 #export JAVA_OPTS='-Xmx5000M -Xms5000M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC'
 export JAVA_HOME=/usr/lib/jvm/default-java
-export GOROOT=$HOME/projects
+export GOROOT=/usr/local/go
 export GOPATH=$HOME/tools
 
 #$systemctl status firewalld.service

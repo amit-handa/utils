@@ -8,6 +8,8 @@ let NERDTreeIgnore=['\.pyc$', '\~$'] "ignore files in NERDTree
 
 let mapleader=","
 
+au BufRead,BufNewFile *.yml set filetype=ansible
+
 autocmd vimenter * NERDTree
 map <C-n> :NERDTreeToggle<CR>
 map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
@@ -30,9 +32,12 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'kien/ctrlp.vim'
 Plugin 'tpope/vim-fugitive'
+Plugin 'fatih/vim-go'
 "Plugin 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
 Plugin 'jnurmine/Zenburn'
 Plugin 'altercation/vim-colors-solarized'
+Plugin 'pearofducks/ansible-vim'
+
 "Plugin 'elixir-lang/vim-elixir'
 
 " All of your Plugins must be added before the following line
@@ -133,13 +138,9 @@ set matchpairs+=<:>
 set nrformats-=octal,hex
 set scrolloff=1
 set shiftround
-set shiftwidth=4
 set showcmd
 set showmatch
 set smartcase
-"set smarttab
-set softtabstop=4
-set tabstop=4
 set splitbelow
 set statusline=%f\ %y%r%1*%m%*%=%<x%02B%4vv%4cc%7l\ %P
 highlight! link User1 ErrorMsg
@@ -193,7 +194,7 @@ set pastetoggle=<F7>
 highlight CursorLine	cterm=underline
 highlight Visual cterm=reverse term=reverse
 
-set tabstop=4
-set noexpandtab
 " zM : close all folds, zR : open all folds
 set mouse=a	" enable mouse
+set tabstop=4 softtabstop=0 expandtab shiftwidth=4 smarttab
+autocmd FileType ansible setlocal tabstop=2 softtabstop=0 expandtab shiftwidth=2 smarttab
