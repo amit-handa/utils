@@ -10,6 +10,7 @@ PROMPT_COLOR='35;1m'
 export HISTCONTROL=ignoreboth
 export EDITOR="vim"
 export VISUAL="vim"
+export GOPATH=${HOME}/go
 
 #shopt -s histappend
 #shopt -s checkwinsize
@@ -33,7 +34,7 @@ force_color_prompt=yes
 #fi
 
 #export M2_HOME=~/tools/maven
-export PATH=~/tools/bin:~/tools/vertx/bin:~/tools/mongodb/bin:~/tools/activemq/bin:$M2_HOME/bin:~/tools/tomcat/bin:$PATH
+export PATH=~/tools/bin:/usr/local/go/bin:~/tools/mongodb/bin:$M2_HOME/bin:$PATH
 
 #export JAVA_OPTS='-Xmx5000M -Xms5000M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC'
 export JAVA_HOME=/usr/lib/jvm/default-java
@@ -124,3 +125,6 @@ run_on_prompt_command()
 PROMPT_COMMAND="run_on_prompt_command"
 # ldapsearch -x -h 10.10.20.14 -D "gemsol\\am.handa" -W -b "cn=gemini,dc=gemsol,dc=in" -s sub "(cn=*)" cn mail sn
 export GRADLE_HOME=/home/amit/tools/gradle
+
+source /usr/share/bash-completion/bash_completion
+source <(kubectl completion bash)

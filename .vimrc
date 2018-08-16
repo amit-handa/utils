@@ -9,7 +9,6 @@ let NERDTreeIgnore=['\.pyc$', '\~$'] "ignore files in NERDTree
 let mapleader=","
 
 au BufRead,BufNewFile *.yml set filetype=ansible
-
 autocmd vimenter * NERDTree
 map <C-n> :NERDTreeToggle<CR>
 map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
@@ -37,7 +36,6 @@ Plugin 'fatih/vim-go'
 Plugin 'jnurmine/Zenburn'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'pearofducks/ansible-vim'
-
 "Plugin 'elixir-lang/vim-elixir'
 
 " All of your Plugins must be added before the following line
@@ -138,9 +136,13 @@ set matchpairs+=<:>
 set nrformats-=octal,hex
 set scrolloff=1
 set shiftround
+set shiftwidth=4
 set showcmd
 set showmatch
 set smartcase
+"set smarttab
+set softtabstop=4
+set tabstop=4
 set splitbelow
 set statusline=%f\ %y%r%1*%m%*%=%<x%02B%4vv%4cc%7l\ %P
 highlight! link User1 ErrorMsg
@@ -155,6 +157,7 @@ autocmd BufEnter *              let &titlestring = hostname() . ':' . expand('%f
 autocmd FileType help           nmap <C-m> <C-]>
 autocmd FileType html           setlocal indentkeys-=o,O,*<Return>,<>>,<bs>
 autocmd FileType mail           setlocal textwidth=76
+autocmd FileType yaml           syntax off
 
 autocmd BufRead *.*html*        setlocal filetype=html
 autocmd BufRead *.css*          setlocal filetype=css
@@ -184,6 +187,8 @@ nmap <F8>       <C-w>w
 
 let python_highlight_all=1
 syntax on
+set synmaxcol=120
+
 set secure
 set t_co=256
 " set   iskeyword+=^_
@@ -194,6 +199,8 @@ set pastetoggle=<F7>
 highlight CursorLine	cterm=underline
 highlight Visual cterm=reverse term=reverse
 
+set tabstop=4
+set noexpandtab
 " zM : close all folds, zR : open all folds
 set mouse=a	" enable mouse
 set tabstop=4 softtabstop=0 expandtab shiftwidth=4 smarttab
