@@ -133,3 +133,4 @@ source /usr/share/bash-completion/bash_completion
 source <(kubectl completion bash)
 
 source .kubectlAliases
+for i in $(cut -f2 -d ' ' .kubectlAliases | cut -f1 -d '='); do complete -F _complete_alias $i; done
