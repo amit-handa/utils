@@ -34,7 +34,7 @@ force_color_prompt=yes
 #fi
 
 #export M2_HOME=~/tools/maven
-export PATH=~/tools/bin:/usr/local/go/bin:~/tools/mongodb/bin:$M2_HOME/bin:$PATH
+export PATH=~/tools/bin:/home/amit/.local/bin:/usr/local/go/bin:~/tools/mongodb/bin:$M2_HOME/bin:$PATH
 
 #export JAVA_OPTS='-Xmx5000M -Xms5000M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC'
 export JAVA_HOME=/usr/lib/jvm/default-java
@@ -46,10 +46,13 @@ export GOPATH=$HOME/tools
 
 set bind-tty-special-chars Off
 
-bind "set completion-ignore-case on"
-bind '"\C-w": backward-kill-word'
-bind '"\ep": history-search-backward'
-bind '"\en": history-search-forward'
+if [ -t 1 ]
+then
+    bind "set completion-ignore-case on"
+    bind '"\C-w": backward-kill-word'
+    bind '"\ep": history-search-backward'
+    bind '"\en": history-search-forward'
+fi
 export LC_ALL=C
 
 alias ls='ls --color'
@@ -128,3 +131,6 @@ export GRADLE_HOME=/home/amit/tools/gradle
 
 source /usr/share/bash-completion/bash_completion
 source <(kubectl completion bash)
+source "/home/amit/.sdkman/bin/sdkman-init.sh"
+
+source .kubectlAliases
