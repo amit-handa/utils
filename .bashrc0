@@ -131,6 +131,5 @@ export GRADLE_HOME=/home/amit/tools/gradle
 
 source /usr/share/bash-completion/bash_completion
 source <(kubectl completion bash)
-source "/home/amit/.sdkman/bin/sdkman-init.sh"
 
 source .kubectlAliases
