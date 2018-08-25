@@ -10,7 +10,6 @@ PROMPT_COLOR='35;1m'
 export HISTCONTROL=ignoreboth
 export EDITOR="vim"
 export VISUAL="vim"
-export GOPATH=${HOME}/go
 
 #shopt -s histappend
 #shopt -s checkwinsize
@@ -39,7 +38,7 @@ export PATH=~/tools/bin:/home/amit/.local/bin:/usr/local/go/bin:~/tools/mongodb/
 #export JAVA_OPTS='-Xmx5000M -Xms5000M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC'
 export JAVA_HOME=/usr/lib/jvm/default-java
 export GOROOT=/usr/local/go
-export GOPATH=$HOME/tools
+export GOPATH=${HOME}/go
 
 #$systemctl status firewalld.service
 #$nmap -sT -O 192.168.1.18
@@ -132,5 +131,5 @@ export GRADLE_HOME=/home/amit/tools/gradle
 source /usr/share/bash-completion/bash_completion
 source <(kubectl completion bash)
 
-source .kubectlAliases
-for i in $(cut -f2 -d ' ' .kubectlAliases | cut -f1 -d '='); do complete -F _complete_alias $i; done
+source ~/.kubectlAliases
+for i in $(cut -f2 -d ' ' ~/.kubectlAliases | cut -f1 -d '='); do complete -F _complete_alias $i; done
