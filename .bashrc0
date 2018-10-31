@@ -60,18 +60,18 @@ alias mongo-cli='rlwrap -a -- mongo'
 
 #java -classpath "target/noty-1.0.0.jar:/home/akhanda/tools/vertx/mods/com.ahanda.techops~noty~1.0.0/lib/*:/home/akhanda/tools/vert.x-2.0.2-final/lib/*" $JAVA_OPTS com.ahanda.techops.noty.ds.EventCache2
 
-export NVM_DIR="/home/gamihan/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+#export NVM_DIR="/home/gamihan/.nvm"
+#[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
 
 SSH_ENV="$HOME/.ssh/environment"
 
 function start_agent {
     echo "Initialising new SSH agent..."
-    /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
+    ssh-agent -s | sed 's/^echo/#echo/' > "${SSH_ENV}"
     echo succeeded
     chmod 600 "${SSH_ENV}"
     . "${SSH_ENV}" > /dev/null
-    /usr/bin/ssh-add;
+    ssh-add;
 }
 
 # Source SSH settings, if applicable
