@@ -10,6 +10,7 @@ PROMPT_COLOR='35;1m'
 export HISTCONTROL=ignoreboth
 export EDITOR="vim"
 export VISUAL="vim"
+export LESS="-eirMX"
 
 #shopt -s histappend
 #shopt -s checkwinsize
@@ -133,3 +134,4 @@ source <(kubectl completion bash)
 
 source ~/.kubectlAliases
 for i in $(cut -f2 -d ' ' ~/.kubectlAliases | cut -f1 -d '='); do complete -F _complete_alias $i; done
+source <(kops completion bash)
