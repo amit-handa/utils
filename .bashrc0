@@ -1,4 +1,4 @@
-PS1='\[\033[1;31m\]\H@\W/\[\033[0m\] '
+PS1='\[\033[1;31m\]\h@\W/\[\033[0m\] '
 
 ##### DEFAULTS #####
 
@@ -10,7 +10,7 @@ PROMPT_COLOR='35;1m'
 export HISTCONTROL=ignoreboth
 export EDITOR="vim"
 export VISUAL="vim"
-export GOPATH=${HOME}/go
+export LESS="-eirMX"
 
 #shopt -s histappend
 #shopt -s checkwinsize
@@ -39,7 +39,7 @@ export PATH=~/tools/bin:/home/amit/.local/bin:/usr/local/go/bin:~/tools/mongodb/
 #export JAVA_OPTS='-Xmx5000M -Xms5000M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC'
 export JAVA_HOME=/usr/lib/jvm/default-java
 export GOROOT=/usr/local/go
-export GOPATH=$HOME/tools
+export GOPATH=${HOME}/go
 
 #$systemctl status firewalld.service
 #$nmap -sT -O 192.168.1.18
@@ -61,18 +61,18 @@ alias mongo-cli='rlwrap -a -- mongo'
 
 #java -classpath "target/noty-1.0.0.jar:/home/akhanda/tools/vertx/mods/com.ahanda.techops~noty~1.0.0/lib/*:/home/akhanda/tools/vert.x-2.0.2-final/lib/*" $JAVA_OPTS com.ahanda.techops.noty.ds.EventCache2
 
-export NVM_DIR="/home/gamihan/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+#export NVM_DIR="/home/gamihan/.nvm"
+#[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
 
 SSH_ENV="$HOME/.ssh/environment"
 
 function start_agent {
     echo "Initialising new SSH agent..."
-    /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
+    ssh-agent -s | sed 's/^echo/#echo/' > "${SSH_ENV}"
     echo succeeded
     chmod 600 "${SSH_ENV}"
     . "${SSH_ENV}" > /dev/null
-    /usr/bin/ssh-add;
+    ssh-add;
 }
 
 # Source SSH settings, if applicable
@@ -132,5 +132,6 @@ export GRADLE_HOME=/home/amit/tools/gradle
 source /usr/share/bash-completion/bash_completion
 source <(kubectl completion bash)
 
-source .kubectlAliases
-for i in $(cut -f2 -d ' ' .kubectlAliases | cut -f1 -d '='); do complete -F _complete_alias $i; done
+source ~/.kubectlAliases
+for i in $(cut -f2 -d ' ' ~/.kubectlAliases | cut -f1 -d '='); do complete -F _complete_alias $i; done
+source <(kops completion bash)
