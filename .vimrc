@@ -33,6 +33,8 @@ Plugin 'tpope/vim-fugitive'
 "Plugin 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
 Plugin 'jnurmine/Zenburn'
 Plugin 'altercation/vim-colors-solarized'
+Bundle 'chase/vim-ansible-yaml'
+
 "Plugin 'elixir-lang/vim-elixir'
 
 " All of your Plugins must be added before the following line
@@ -200,3 +202,4 @@ set tabstop=4
 set noexpandtab
 " zM : close all folds, zR : open all folds
 set mouse=a	" enable mouse
+autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
