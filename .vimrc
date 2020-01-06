@@ -40,12 +40,12 @@ Bundle 'chase/vim-ansible-yaml'
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 
-if has('gui_running')
-  set background=dark
-  colorscheme solarized
-else
-  colorscheme zenburn
-endif
+"if has('gui_running')
+"  set background=dark
+"  colorscheme solarized
+"else
+"  colorscheme zenburn
+"endif
 
 set guifont=Source\ Code\ Pro\ for\ Powerline "make sure to escape the spaces in the name properly
 set splitright
