@@ -126,10 +126,10 @@ source $ZSH/oh-my-zsh.sh
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 #export JAVA_OPTS='-Xmx5000M -Xms5000M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC'
-export JAVA_HOME=/Library/Java/JavaVirtualMachines/openjdk-13.jdk/Contents/Home
-export GOROOT=/usr/local/Cellar/go/1.13.4/libexec
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/adoptopenjdk-11.jdk/Contents/Home
+export GOROOT=/usr/local/Cellar/go/1.13.5/libexec
 export GOPATH=${HOME}/go
-export PATH=~/tools/bin:~/.local/bin:/opt/local/bin:/opt/local/sbin:$GOROOT/bin:$PATH
+export PATH=/usr/local/bin:~/tools/bin:~/.local/bin:/opt/local/bin:/opt/local/sbin:$GOROOT/bin:$PATH
 
 source <(kubectl completion zsh)
 source ~/.kubectlAliases
@@ -152,3 +152,14 @@ eval "$(ssh-agent -s)"
 #bindkey -M vicmd '^K' kill-word
 bindkey -M emacs '^[f' vi-forward-blank-word-end
 source ~/tools/bin/_istioctl
+
+. ~/.zshrcdd
+#export PATH="$HOME/.jenv/bin:$PATH"
+#eval "$(jenv init -)"
+if [[ "$TERMINAL_EMULATOR" == "JetBrains-JediTerm" ]]; then
+  bindkey "∫" backward-word # Option-b
+  bindkey "ƒ" forward-word  # Option-f
+  bindkey "∂" delete-word   # Option-d
+fi
+
+FPATH=~/.oh-my-zsh/functions:$FPATH
