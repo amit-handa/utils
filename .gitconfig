@@ -1,7 +1,24 @@
 [user]
-	email = amit.handa@gmail.com
+	email = amit.handa@doordash.com
 	name = amit handa
 [push]
 	default = simple
 [core]
 	editor = vim
+[credential]
+	helper = osxkeychain
+[branch]
+	autosetuprebase = always
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[hub]
+	protocol = https
+[credential "https://github.com/amit-handa"]
+	helper = 
+	helper = !/usr/local/bin/gh auth git-credential
+[credential "https://gist.github.com/amit-handa"]
+	helper = 
+	helper = !/usr/local/bin/gh auth git-credential
