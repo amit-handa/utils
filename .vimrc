@@ -8,7 +8,7 @@ let NERDTreeIgnore=['\.pyc$', '\~$'] "ignore files in NERDTree
 
 let mapleader=","
 
-autocmd vimenter * NERDTree
+"autocmd vimenter * NERDTree
 map <C-n> :NERDTreeToggle<CR>
 map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
@@ -203,3 +203,4 @@ set noexpandtab
 " zM : close all folds, zR : open all folds
 set mouse=a	" enable mouse
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+set tabpagemax=50
