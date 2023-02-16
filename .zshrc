@@ -9,7 +9,7 @@ fi
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH="/Users/amit.handa/.oh-my-zsh"
+export ZSH="/Users/amit/.oh-my-zsh"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -17,6 +17,7 @@ export ZSH="/Users/amit.handa/.oh-my-zsh"
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
 #ZSH_THEME="robbyrussell"
 ZSH_THEME="powerlevel10k/powerlevel10k"
+#source ~/powerlevel10k/powerlevel10k.zsh-theme
 source $(dirname $(gem which colorls))/tab_complete.sh
 
 # Set list of themes to pick from when loading at random
@@ -82,10 +83,6 @@ aws
 dnf
 fzf
 git
-go
-helm
-minikube
-terraform
 zsh-syntax-highlighting
 zsh-autosuggestions
 zsh-completions
@@ -133,16 +130,15 @@ export PATH=/usr/local/bin:~/tools/bin:~/.local/bin:/opt/local/bin:/opt/local/sb
 
 source <(kubectl completion zsh)
 source ~/.kubectlAliases
-source <(kops completion zsh)
 
 set clipboard=unnamed
-export AWS_PROFILE=infra-dev
+export AWS_PROFILE=prod-engineer
 #export KUBECONFIG=~/.kube/kubeconfig_amit
 
 alias yaml2json="ruby -ryaml -rjson -e 'puts JSON.pretty_generate(YAML.load(ARGF))'"
 
 # opam configuration
-test -r /Users/amit.handa/.opam/opam-init/init.zsh && . /Users/amit.handa/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
+test -r /Users/amit/.opam/opam-init/init.zsh && . /Users/amit/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
 
 #export WORDCHARS='|~!#$%^&*(){}[]<>?.+;-'
 #export WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
@@ -151,9 +147,6 @@ eval "$(ssh-agent -s)"
 
 #bindkey -M vicmd '^K' kill-word
 bindkey -M emacs '^[f' vi-forward-blank-word-end
-source ~/tools/bin/_istioctl
-
-. ~/.zshrcdd
 #export PATH="$HOME/.jenv/bin:$PATH"
 #eval "$(jenv init -)"
 if [[ "$TERMINAL_EMULATOR" == "JetBrains-JediTerm" ]]; then
@@ -163,3 +156,5 @@ if [[ "$TERMINAL_EMULATOR" == "JetBrains-JediTerm" ]]; then
 fi
 
 FPATH=~/.oh-my-zsh/functions:$FPATH
+source ~/.zshrcdd
+eval "$(/opt/homebrew/bin/brew shellenv)"

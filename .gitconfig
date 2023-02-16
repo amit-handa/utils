@@ -16,9 +16,13 @@
 	required = true
 [hub]
 	protocol = https
-[credential "https://github.com/amit-handa"]
+[credential "https://github.com/doordash"]
 	helper = 
 	helper = !/usr/local/bin/gh auth git-credential
-[credential "https://gist.github.com/amit-handa"]
+
+[credential "https://github.com/amit-handda"]
+	helper = 
+	helper = !/usr/local/bin/gh auth git-credential
+[credential "https://gist.github.com/amit-handda"]
 	helper = 
 	helper = !/usr/local/bin/gh auth git-credential
