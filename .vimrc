@@ -3,7 +3,7 @@
 let g:molokai_original = 1
 let g:SimpylFold_docstring_preview=1
 let g:ycm_autoclose_preview_window_after_completion=1
-let g:nerdtree_tabs_open_on_console_startup = 1
+let g:nerdtree_tabs_open_on_console_startup = 0
 let NERDTreeIgnore=['\.pyc$', '\~$'] "ignore files in NERDTree
 
 let mapleader=","

@@ -5,6 +5,15 @@
 	default = simple
 [core]
 	editor = vim
+	compression = 0
+	packedGitLimit = 8192m
+	packedGitWindowSize = 8192m
+	compression = 9
+	compression = 9
+#[pack]
+#	deltaCacheSize = 2048m
+#	packSizeLimit = 4096m
+#	windowMemory = 4096m
 [credential]
 	helper = osxkeychain
 [branch]
@@ -18,11 +27,13 @@
 	protocol = https
 [credential "https://github.com/doordash"]
 	helper = 
-	helper = !/usr/local/bin/gh auth git-credential
+	helper = !/opt/homebrew/bin/gh auth git-credential
 
 [credential "https://github.com/amit-handda"]
 	helper = 
-	helper = !/usr/local/bin/gh auth git-credential
+	helper = !/opt/homebrew/bin/gh auth git-credential
 [credential "https://gist.github.com/amit-handda"]
 	helper = 
-	helper = !/usr/local/bin/gh auth git-credential
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[http]
+	postBuffer = 524288000

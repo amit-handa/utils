@@ -123,16 +123,16 @@ source $ZSH/oh-my-zsh.sh
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 #export JAVA_OPTS='-Xmx5000M -Xms5000M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC'
-export JAVA_HOME=/Library/Java/JavaVirtualMachines/adoptopenjdk-11.jdk/Contents/Home
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/openjdk.jdk@17/Contents/Home
 export GOROOT=/usr/local/Cellar/go/1.13.5/libexec
 export GOPATH=${HOME}/go
-export PATH=/usr/local/bin:~/tools/bin:~/.local/bin:/opt/local/bin:/opt/local/sbin:$GOROOT/bin:$PATH
+export PATH=/opt/homebrew/bin:/usr/local/bin:~/tools/bin:~/.local/bin:/opt/local/bin:/opt/local/sbin:$GOROOT/bin:$PATH
 
 source <(kubectl completion zsh)
 source ~/.kubectlAliases
 
 set clipboard=unnamed
-export AWS_PROFILE=prod-engineer
+export AWS_PROFILE=okta-prod-engineer
 #export KUBECONFIG=~/.kube/kubeconfig_amit
 
 alias yaml2json="ruby -ryaml -rjson -e 'puts JSON.pretty_generate(YAML.load(ARGF))'"
@@ -147,8 +147,10 @@ eval "$(ssh-agent -s)"
 
 #bindkey -M vicmd '^K' kill-word
 bindkey -M emacs '^[f' vi-forward-blank-word-end
-#export PATH="$HOME/.jenv/bin:$PATH"
-#eval "$(jenv init -)"
+export PATH="$HOME/.jenv/bin:$PATH"
+eval "$(jenv init -)"
+jenv enable-plugin export
+
 if [[ "$TERMINAL_EMULATOR" == "JetBrains-JediTerm" ]]; then
   bindkey "∫" backward-word # Option-b
   bindkey "ƒ" forward-word  # Option-f
@@ -158,3 +160,32 @@ fi
 FPATH=~/.oh-my-zsh/functions:$FPATH
 source ~/.zshrcdd
 eval "$(/opt/homebrew/bin/brew shellenv)"
+eval "$(rbenv init - zsh)"
+alias devbox="dd-toolbox devbox"
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+export PATH=$PATH:$HOME/.maestro/bin
+export PATH=$(pyenv root)/shims:$PATH
+
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/Users/amit/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/Users/amit/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "/Users/amit/miniconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/Users/amit/miniconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
+export ETL_HOME=/Users/amit/Projects/doordash-etl
+export PYTHONPATH=/Users/amit/Projects/doordash-etl
+export ETL_RUNTIME_ENVIRONMENT=local
+export GRADLE_HOME=/opt/homebrew/Cellar/gradle/8.9
