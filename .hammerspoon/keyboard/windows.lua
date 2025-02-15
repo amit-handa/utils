@@ -257,6 +257,7 @@ for i, mapping in ipairs(mappings) do
 
   windowLayoutMode:bindWithAutomaticExit(modifiers, trigger, function()
     --example: hs.window.focusedWindow():upRight()
+    --hs.window.focusedWindow():hss.window.left40( hs.window.focusedWindow() )
     local fw = hs.window.focusedWindow()
     fw[winFunction](fw)
   end)

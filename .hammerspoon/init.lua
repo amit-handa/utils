@@ -19,4 +19,7 @@ spoon.Ki:start()                   -- enable keyboard shortcuts
 --hs.loadSpoon( 'Lunette' )
 --spoon.Lunette:bindHotkeys()
 --hs.alert.show( spoon.Lunette:bindHotKeys() )
+
+
+-- require('winlayout')
 require('keyboard') -- Load Hammerspoon bits from https://github.com/jasonrudolph/keyboard
