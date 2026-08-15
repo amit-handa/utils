@@ -1,0 +1,36 @@
+diff --git a/init.lua b/init.lua
+index 3508b28..f3aa237 100644
+--- a/init.lua
++++ b/init.lua
+@@ -766,6 +766,8 @@ do
+   local ensure_installed = vim.tbl_keys(servers or {})
+   vim.list_extend(ensure_installed, {
+     -- You can add other tools here that you want Mason to install
++    'gopls', -- binary needed by project-local `.nvim/lsp/gopls.lua` when present
++    'markdownlint', -- linter for markdown (kickstart.plugins.lint)
+   })
+ 
+   require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+@@ -981,8 +983,7 @@ do
+ 
+   -- NOTE: You can add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
+   --
+-  --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
+-  -- require 'custom.plugins'
++  require 'custom.plugins'
+ end
+ 
+ -- The line beneath this is called `modeline`. See `:help modeline`
+diff --git a/lua/kickstart/plugins/lint.lua b/lua/kickstart/plugins/lint.lua
+index d630544..c9ffa81 100644
+--- a/lua/kickstart/plugins/lint.lua
++++ b/lua/kickstart/plugins/lint.lua
+@@ -4,7 +4,7 @@ vim.pack.add { 'https://github.com/mfussenegger/nvim-lint' }
+ 
+ local lint = require 'lint'
+ lint.linters_by_ft = {
+-  markdown = { 'markdownlint' }, -- Make sure to install `markdownlint` via mason / npm
++  markdown = {}, -- markdownlint disabled
+ }
+ 
+ -- To allow other plugins to add linters to require('lint').linters_by_ft,

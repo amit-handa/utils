@@ -1,0 +1,24 @@
+{
+  "claudeCode.autosave": true,
+  "claudeCode.initialPermissionMode": "acceptEdits",
+  "explorer.confirmDelete": false,
+  "explorer.confirmDragAndDrop": false,
+  "extensions.autoUpdate": {
+    "anthropic.claude-code": false
+  },
+  "extensions.installCooldownHours": 2,
+  "files.watcherExclude": {
+    "**/.git/**": true,
+    "**/.gradle/**": true,
+    "**/bazel-*/**": true,
+    "**/build/**": true,
+    "**/generated/**": true
+  },
+  "go.toolsManagement.autoUpdate": true,
+  "kotlin.languageServer.enabled": true,
+  "piIdeBridge.enabled": true,
+  "redhat.telemetry.enabled": false,
+  "security.promptForLocalFileProtocolHandling": false,
+  "security.promptForRemoteFileProtocolHandling": false,
+  "workbench.colorTheme": "Cursor Dark"
+}

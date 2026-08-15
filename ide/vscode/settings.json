@@ -1,0 +1,19 @@
+{
+  "claudeCode.autosave": true,
+  "claudeCode.initialPermissionMode": "acceptEdits",
+  "claudeCode.preferredLocation": "panel",
+  "claudeCode.useCtrlEnterToSend": true,
+  "claudeCode.useTerminal": true,
+  "containers.containerClient": "com.microsoft.visualstudio.containers.docker",
+  "containers.orchestratorClient": "com.microsoft.visualstudio.orchestrators.dockercompose",
+  "editor.minimap.enabled": false,
+  "extensions.autoUpdate": {
+    "anthropic.claude-code": false
+  },
+  "gitlens.ai.model": "vscode",
+  "gitlens.ai.vscode.model": "copilot:gpt-4.1",
+  "redhat.telemetry.enabled": false,
+  "task.allowAutomaticTasks": "on",
+  "workbench.colorTheme": "Monokai Pro",
+  "workbench.iconTheme": "Monokai Pro Icons"
+}
