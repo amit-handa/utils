@@ -1,0 +1,37 @@
+# Work-only shell settings. Keep credentials in local credential stores.
+
+autoload -Uz add-zsh-hook
+zmodload zsh/datetime 2>/dev/null
+
+export AWS_PROFILE=okta-prod-engineer
+
+if [[ -r "$HOME/.kubectlAliases" ]]; then
+  source "$HOME/.kubectlAliases"
+fi
+
+export ETL_HOME="$HOME/Projects/doordash-etl"
+export PYTHONPATH="$ETL_HOME"
+export ETL_RUNTIME_ENVIRONMENT=local
+
+alias devbox="dd-toolbox devbox"
+
+if [[ -f "$HOME/Projects/doordash/pedregal/scripts/grpf.sh" ]]; then
+  source "$HOME/Projects/doordash/pedregal/scripts/grpf.sh"
+fi
+
+if [[ -n ${HERDR_WORKSPACE_ID:-} ]] && (( $+commands[herdr] )); then
+  typeset -gi _herdr_title_at=0
+  _herdr_title_precmd() {
+    (( EPOCHSECONDS - _herdr_title_at < 60 )) && return
+    _herdr_title_at=$EPOCHSECONDS
+    local label
+    label=$(herdr workspace get "$HERDR_WORKSPACE_ID" 2>/dev/null | jq -r '.result.workspace.label // empty')
+    herdr terminal title set "${label:-$HERDR_WORKSPACE_ID}" >/dev/null 2>&1
+  }
+  add-zsh-hook precmd _herdr_title_precmd
+
+  if [[ -x "$HOME/.local/bin/herdr-title-watch" ]] &&
+     ! pgrep -f herdr-title-watch >/dev/null 2>&1; then
+    nohup "$HOME/.local/bin/herdr-title-watch" >/dev/null 2>&1 &!
+  fi
+fi

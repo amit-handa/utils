@@ -1,215 +1,169 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block, everything else may go below.
-# if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-#   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-# fi
+# Oh My Zsh
+if [[ -x /opt/homebrew/bin/brew ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
 
+export ZSH="$HOME/.oh-my-zsh"
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+setopt no_case_glob
+export ZSH_THEME="robbyrussell"
+plugins=(dnf fzf git zsh-autosuggestions zsh-completions)
 
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
+source "$ZSH/oh-my-zsh.sh"
 
-# Path to your oh-my-zsh installation.
-export ZSH="/Users/amit/.oh-my-zsh"
-
-export LANG=en_US.UTF-8                                                                       
-export LC_ALL=en_US.UTF-8   
-
-# Set name of the theme to load --- if set to "random", it will
-# load a random theme each time oh-my-zsh is loaded, in which case,
-# to know which specific one was loaded, run: echo $RANDOM_THEME
-# See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="robbyrussell"
-#ZSH_THEME="powerlevel10k/powerlevel10k"
-#source ~/powerlevel10k/powerlevel10k.zsh-theme
-#source $(dirname $(gem which colorls))/tab_complete.sh
-
-# Set list of themes to pick from when loading at random
-# Setting this variable when ZSH_THEME=random will cause zsh to load
-# a theme from this variable instead of looking in ~/.oh-my-zsh/themes/
-# If set to an empty array, this variable will have no effect.
-# ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
-
-# Uncomment the following line to use case-sensitive completion.
-# CASE_SENSITIVE="true"
-
-# Uncomment the following line to use hyphen-insensitive completion.
-# Case-sensitive completion must be off. _ and - will be interchangeable.
-# HYPHEN_INSENSITIVE="true"
-
-# Uncomment the following line to disable bi-weekly auto-update checks.
-# DISABLE_AUTO_UPDATE="true"
-
-# Uncomment the following line to automatically update without prompting.
-# DISABLE_UPDATE_PROMPT="true"
-
-# Uncomment the following line to change how often to auto-update (in days).
-# export UPDATE_ZSH_DAYS=13
-
-# Uncomment the following line if pasting URLs and other text is messed up.
-# DISABLE_MAGIC_FUNCTIONS=true
-
-# Uncomment the following line to disable colors in ls.
-# DISABLE_LS_COLORS="true"
-
-# Uncomment the following line to disable auto-setting terminal title.
-# DISABLE_AUTO_TITLE="true"
-
-# Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
-
-# Uncomment the following line to display red dots whilst waiting for completion.
-# COMPLETION_WAITING_DOTS="true"
-
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-# Uncomment the following line if you want to change the command execution time
-# stamp shown in the history command output.
-# You can set one of the optional three formats:
-# "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# or set a custom format using the strftime function format specifications,
-# see 'man strftime' for details.
-# HIST_STAMPS="mm/dd/yyyy"
-
-# Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
-
-# Which plugins would you like to load?
-# Standard plugins can be found in ~/.oh-my-zsh/plugins/*
-# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
-plugins=(
-#aws
-dnf
-fzf
-git
-zsh-autosuggestions
-zsh-completions
-# this is buggy !
-# zsh-syntax-highlighting
-#vi-mode
+# Keep PATH entries unique while preserving the existing shell path.
+typeset -U path fpath
+path=(
+  /opt/homebrew/bin
+  /usr/local/bin
+  "$HOME/tools/bin"
+  "$HOME/.local/bin"
+  /opt/local/bin
+  /opt/local/sbin
+  $path
 )
+fpath=("$ZSH/functions" $fpath)
 
-source $ZSH/oh-my-zsh.sh
+# Preferred editor for local and remote sessions.
+if [[ -n ${SSH_CONNECTION:-} ]]; then
+  export EDITOR=vim
+else
+  export EDITOR=nvim
+fi
+export VISUAL=cursor
+alias vi=nvim
 
-# User configuration
+if [[ -r "$HOME/.fzf.zsh" ]]; then
+  source "$HOME/.fzf.zsh"
+fi
 
-# export MANPATH="/usr/local/man:$MANPATH"
-
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
-
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
-
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
-#
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-# [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-#export JAVA_OPTS='-Xmx5000M -Xms5000M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC'
-export JAVA_HOME=/Library/Java/JavaVirtualMachines/openjdk.jdk@17/Contents/Home
-export GOROOT=/opt/homebrew/Cellar/go/1.26.1/libexec
-export GOPATH=${HOME}/go
-export PATH=/opt/homebrew/bin:/usr/local/bin:~/tools/bin:~/.local/bin:/opt/local/bin:/opt/local/sbin:$GOROOT/bin:$PATH
-
-#source <(kubectl completion zsh)
-source ~/.kubectlAliases
-
-set clipboard=unnamed
-export AWS_PROFILE=okta-prod-engineer
-#export KUBECONFIG=~/.kube/kubeconfig_amit
+if [[ -x /usr/libexec/java_home ]]; then
+  JAVA_HOME=$(/usr/libexec/java_home -v 17 2>/dev/null)
+  [[ -n "$JAVA_HOME" ]] && export JAVA_HOME
+fi
+if (( $+commands[brew] )); then
+  GOROOT="$(brew --prefix go 2>/dev/null)/libexec"
+  [[ -d "$GOROOT" ]] && export GOROOT
+  gradle_root="$(brew --prefix gradle 2>/dev/null)"
+  [[ -d "$gradle_root" ]] && export GRADLE_HOME="$gradle_root"
+fi
+export GOPATH="$HOME/go"
+[[ -n ${GOROOT:-} ]] && path=("$GOROOT/bin" $path)
 
 alias yaml2json="ruby -ryaml -rjson -e 'puts JSON.pretty_generate(YAML.load(ARGF))'"
 
-# opam configuration
-test -r /Users/amit/.opam/opam-init/init.zsh && . /Users/amit/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
-
-#export WORDCHARS='|~!#$%^&*(){}[]<>?.+;-'
-#export WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
-export EDITOR='vim -u NONE'
-eval "$(ssh-agent -s)"
-
-#bindkey -M vicmd '^K' kill-word
-bindkey -M emacs '^[f' vi-forward-blank-word-end
-export PATH="$HOME/.jenv/bin:$PATH"
-eval "$(jenv init -)"
-jenv enable-plugin export
-
-if [[ "$TERMINAL_EMULATOR" == "JetBrains-JediTerm" ]]; then
-  bindkey "∫" backward-word # Option-b
-  bindkey "ƒ" forward-word  # Option-f
-  bindkey "∂" delete-word   # Option-d
+if [[ -r "$HOME/.opam/opam-init/init.zsh" ]]; then
+  source "$HOME/.opam/opam-init/init.zsh" >/dev/null 2>&1
 fi
 
-FPATH=~/.oh-my-zsh/functions:$FPATH
-source ~/.zshrcdd
-eval "$(/opt/homebrew/bin/brew shellenv)"
-eval "$(rbenv init - zsh)"
-alias devbox="dd-toolbox devbox"
+SSH_ENV="$HOME/.ssh/environment"
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
-[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
-export PATH=$PATH:$HOME/.maestro/bin
-export PATH=$(pyenv root)/shims:$PATH
+_start_ssh_agent() {
+  [[ -d "${SSH_ENV:h}" ]] || return 1
+  ssh-agent -s | sed 's/^echo/#echo/' >| "$SSH_ENV" || return 1
+  chmod 600 "$SSH_ENV" || return 1
+  source "$SSH_ENV" >/dev/null 2>&1 || return 1
+  ssh-add
+}
 
+if (( $+commands[ssh-agent] && $+commands[ssh-add] )); then
+  if [[ -r "$SSH_ENV" ]]; then
+    source "$SSH_ENV" >/dev/null 2>&1
+  fi
+  if [[ -z ${SSH_AGENT_PID:-} ]] ||
+     ! kill -0 "$SSH_AGENT_PID" >/dev/null 2>&1; then
+    _start_ssh_agent
+  fi
+fi
+
+bindkey -M emacs '^[f' vi-forward-blank-word-end
+if [[ "$TERMINAL_EMULATOR" == "JetBrains-JediTerm" ]]; then
+  bindkey "∫" backward-word
+  bindkey "ƒ" forward-word
+  bindkey "∂" delete-word
+fi
+bindkey -M emacs '^[[1;3D' backward-word
+bindkey -M emacs '^[[1;3C' forward-word
+
+if [[ -d "$HOME/.jenv/bin" ]]; then
+  path=("$HOME/.jenv/bin" $path)
+fi
+if (( $+commands[jenv] )); then
+  eval "$(jenv init -)"
+  jenv enable-plugin export
+fi
+if (( $+commands[rbenv] )); then
+  eval "$(rbenv init - zsh)"
+fi
+if [[ -s "/opt/homebrew/opt/nvm/nvm.sh" ]]; then
+  export NVM_DIR="$HOME/.nvm"
+  source "/opt/homebrew/opt/nvm/nvm.sh"
+  [[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ]] &&
+    source "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
+fi
+[[ -d "$HOME/.maestro/bin" ]] && path=("$HOME/.maestro/bin" $path)
+if (( $+commands[pyenv] )); then
+  path=("$(pyenv root)/shims" $path)
+fi
 
 # >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/Users/amit/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
+if [[ -x "$HOME/miniconda3/bin/conda" ]]; then
+  __conda_setup="$("$HOME/miniconda3/bin/conda" "shell.zsh" "hook" 2>/dev/null)"
+  if [[ $? -eq 0 ]]; then
     eval "$__conda_setup"
-else
-    if [ -f "/Users/amit/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/Users/amit/miniconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/Users/amit/miniconda3/bin:$PATH"
-    fi
+  elif [[ -f "$HOME/miniconda3/etc/profile.d/conda.sh" ]]; then
+    source "$HOME/miniconda3/etc/profile.d/conda.sh"
+  else
+    path=("$HOME/miniconda3/bin" $path)
+  fi
+  unset __conda_setup
 fi
-unset __conda_setup
 # <<< conda initialize <<<
 
-export ETL_HOME=/Users/amit/Projects/doordash-etl
-export PYTHONPATH=/Users/amit/Projects/doordash-etl
-export ETL_RUNTIME_ENVIRONMENT=local
-export GRADLE_HOME=/opt/homebrew/Cellar/gradle/8.9
 
-# Added by devbox to ensure ~/.local/bin is on PATH
-export PATH="/Users/amit/.local/bin:$PATH"
+if [[ -f "$HOME/google-cloud-sdk/path.zsh.inc" ]]; then
+  source "$HOME/google-cloud-sdk/path.zsh.inc"
+fi
+if [[ -f "$HOME/google-cloud-sdk/completion.zsh.inc" ]]; then
+  source "$HOME/google-cloud-sdk/completion.zsh.inc"
+fi
 
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/amit/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/amit/google-cloud-sdk/path.zsh.inc'; fi
+TRAPWINCH() { zle && zle reset-prompt }
 
-# The next line enables shell command completion for gcloud.
-if [ -f '/Users/amit/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/amit/google-cloud-sdk/completion.zsh.inc'; fi
+if (( $+commands[mise] )); then
+  eval "$(mise activate zsh)"
+fi
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-# [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+autoload -Uz add-zsh-hook
+zmodload zsh/datetime 2>/dev/null
 
-TRAPWINCH() { zle && zle reset-prompt }                                                                                                                           
+# Notify with sound when a foreground command takes >=10s.
+_notify_long_preexec() { _NOTIFY_CMD_START=$EPOCHSECONDS }
+_notify_long_precmd() {
+  if [[ -n ${_NOTIFY_CMD_START:-} ]]; then
+    local elapsed=$(( EPOCHSECONDS - _NOTIFY_CMD_START ))
+    (( elapsed >= 10 )) && afplay /System/Library/Sounds/Glass.aiff &>/dev/null &!
+    unset _NOTIFY_CMD_START
+  fi
+}
+add-zsh-hook preexec _notify_long_preexec
+add-zsh-hook precmd _notify_long_precmd
 
-eval "$(mise activate zsh)" # added by https://mise.run/zsh
+export ANDROID_HOME="$HOME/Library/Android/sdk"
+export ANDROID_SDK_ROOT="$ANDROID_HOME"
+path=(
+  "$ANDROID_HOME/platform-tools"
+  "$ANDROID_HOME/emulator"
+  "$ANDROID_HOME/cmdline-tools/latest/bin"
+  $path
+)
 
-# grpf: Graph Runner port-forward tool (managed by pedregal)
-source "/Users/amit/Projects/pedregal-appclip-migration/scripts/grpf.sh"
+# Inject a fresh GitHub token when launching OMP extensions.
+omp() { GITHUB_TOKEN="$(gh auth token 2>/dev/null)" command omp "$@"; }
+
+
+# Load work-only settings when the work profile is linked.
+if [[ -r "$HOME/.zshrc.work" ]]; then
+  source "$HOME/.zshrc.work"
+fi
