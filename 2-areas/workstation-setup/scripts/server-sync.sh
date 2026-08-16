@@ -342,6 +342,19 @@ validate_staged() {
 safe_destination_label() {
   printf '%s' "$ROW_DESTINATION_KEY"
 }
+print_required_vars() {
+  case $ROW_ID in
+    apache2)
+      printf 'PLAN REQUIRED_VAR APACHE_SITE_PATH\n'
+      printf 'PLAN REQUIRED_VAR APACHE_SERVER_NAME\n'
+      printf 'PLAN REQUIRED_VAR APACHE_DOCUMENT_ROOT\n'
+      ;;
+    *)
+      printf 'PLAN REQUIRED_VAR %s\n' "$ROW_DESTINATION_KEY"
+      ;;
+  esac
+}
+
 
 print_plan_for_row() {
   printf 'PLAN SERVICE %s policy=%s\n' "$ROW_ID" "$ROW_POLICY"
@@ -356,6 +369,9 @@ print_plan_for_row() {
   printf 'PLAN SOURCE %s\n' "$ROW_ARTIFACT"
   printf 'PLAN DESTINATION %s\n' "$(safe_destination_label)"
   printf 'PLAN VALIDATE %s\n' "$ROW_ID"
+  if [ -z "$VARS_FILE" ]; then
+    print_required_vars
+  fi
   if [ -n "$VARS_FILE" ]; then
     require_selected_vars
     prepare_staged || fail_error 'could not stage server service template'

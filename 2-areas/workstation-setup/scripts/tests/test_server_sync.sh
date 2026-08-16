@@ -72,6 +72,12 @@ assert_contains "$INVENTORY" 'OK compose immich-app running'
 assert_contains "$INVENTORY" 'OK compose ha2 running'
 assert_contains "$INVENTORY" 'OK compose mosquitto-docker running'
 assert_contains "$INVENTORY" 'UNEXPECTED compose project unexpected-app'
+NO_VARS_PLAN=$(WORKSTATION_PROFILE=server HOME="$HOME_DIR" PATH="$BIN_DIR:$PATH" \
+  bash "$SYNC" --os linux --service apache2 2>&1)
+assert_contains "$NO_VARS_PLAN" 'PLAN REQUIRED_VAR APACHE_SITE_PATH'
+assert_contains "$NO_VARS_PLAN" 'PLAN REQUIRED_VAR APACHE_SERVER_NAME'
+assert_contains "$NO_VARS_PLAN" 'PLAN REQUIRED_VAR APACHE_DOCUMENT_ROOT'
+
 cat >"$BIN_DIR/docker" <<'SH'
 #!/bin/sh
 case "$*" in
