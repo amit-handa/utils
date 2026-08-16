@@ -164,6 +164,7 @@ omp() { GITHUB_TOKEN="$(gh auth token 2>/dev/null)" command omp "$@"; }
 
 
 # Load work-only settings when the work profile is linked.
-if [[ -r "$HOME/.zshrc.work" ]]; then
+if [[ -r "$HOME/.zshrc.work" ]] &&
+   [[ -z ${WORKSTATION_PROFILE:-} || "$WORKSTATION_PROFILE" == work ]]; then
   source "$HOME/.zshrc.work"
 fi

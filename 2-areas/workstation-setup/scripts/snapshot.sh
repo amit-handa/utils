@@ -317,7 +317,7 @@ EOF
 }
 
 collect_config_state() {
-  local revision='unavailable' line fields id source destination mode profile
+  local revision='unavailable' line fields id source destination mode profile environment_profiles
   local path digest status detail module module_path module_digest
   local source_canonical module_canonical
   if [ -d "$UTILS_PATH/.git" ] && ws_command_exists git; then
@@ -328,7 +328,7 @@ collect_config_state() {
   while IFS= read -r line; do
     case $line in id$'\t'*) continue ;; esac
     fields=$(ws_tsv_to_unit_separator "$line")
-    IFS=$'\034' read -r id source destination mode profile <<EOF
+    IFS=$'\034' read -r id source destination mode profile environment_profiles <<EOF
 $fields
 EOF
     ws_tokens_apply_to_os "$profile" "$OS" || continue

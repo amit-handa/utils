@@ -109,6 +109,40 @@ ws_profile_matches() {
   IFS=$old_ifs
   return 1
 }
+ws_valid_environment_profile() {
+  case $1 in
+    personal|server|work) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+ws_valid_environment_profile_tokens() {
+  local tokens=$1 token old_ifs=$IFS
+  case $tokens in
+    ''|'|'*|*'|'|*'||'*) return 1 ;;
+  esac
+  IFS='|'
+  for token in $tokens; do
+    ws_valid_environment_profile "$token" || { IFS=$old_ifs; return 1; }
+  done
+  IFS=$old_ifs
+  return 0
+}
+
+ws_environment_profile_matches() {
+  local tokens=$1 requested=$2 token old_ifs=$IFS
+  [ -n "$requested" ] || return 0
+  IFS='|'
+  for token in $tokens; do
+    if [ "$token" = "$requested" ]; then
+      IFS=$old_ifs
+      return 0
+    fi
+  done
+  IFS=$old_ifs
+  return 1
+}
+
 
 
 ws_tokens_apply_to_os() {

@@ -128,9 +128,11 @@ PROMPT_COMMAND="run_on_prompt_command"
 # ldapsearch -x -h 10.10.20.14 -D "gemsol\\am.handa" -W -b "cn=gemini,dc=gemsol,dc=in" -s sub "(cn=*)" cn mail sn
 export GRADLE_HOME=/home/amit/tools/gradle
 
-source /usr/share/bash-completion/bash_completion
-source <(kubectl completion bash)
+if [ -z "${WORKSTATION_PROFILE:-}" ] || [ "$WORKSTATION_PROFILE" = work ]; then
+  source /usr/share/bash-completion/bash_completion
+  source <(kubectl completion bash)
 
-source ~/.kubectlAliases
-for i in $(cut -f2 -d ' ' ~/.kubectlAliases | cut -f1 -d '='); do complete -F _complete_alias $i; done
-source <(kops completion bash)
+  source ~/.kubectlAliases
+  for i in $(cut -f2 -d ' ' ~/.kubectlAliases | cut -f1 -d '='); do complete -F _complete_alias $i; done
+  source <(kops completion bash)
+fi

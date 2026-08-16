@@ -12,6 +12,7 @@ BREWFILE="$PACKAGE_DIR/manifests/macos/Brewfile"
 APT_PACKAGES="$PACKAGE_DIR/manifests/linux/apt-packages.txt"
 OS=''
 PROFILE=''
+WORKSTATION_PROFILE=${WORKSTATION_PROFILE:-}
 UTILS_PATH=${HOME}/utils
 APPLY=0
 TIMESTAMP=''
@@ -49,6 +50,10 @@ done
 
 case $OS in macos|linux) ;; *) usage_error ;; esac
 case $PROFILE in base|work|mobile) ;; *) usage_error ;; esac
+if [ -n "$WORKSTATION_PROFILE" ] &&
+   ! ws_valid_environment_profile "$WORKSTATION_PROFILE"; then
+  usage_error
+fi
 ws_safe_tsv_field "${HOME:-}" && ws_safe_tsv_field "$UTILS_PATH" || usage_error
 ws_command_exists python3 || {
   ws_die 'python3 is required for bootstrap safety'
@@ -523,10 +528,17 @@ trap 'agent_config_signal_exit 130' INT
 trap 'agent_config_signal_exit 143' TERM
 
 
+environment_profile_allows_desktop() {
+  ws_environment_profile_matches 'personal|work' "$WORKSTATION_PROFILE"
+}
+
 preflight_mapping() {
-  local id=$1 source=$2 destination=$3 mode=$4 profile=$5 destination_resolved
-  ws_safe_token "$id" && valid_profile_tokens "$profile" || return 1
+  local id=$1 source=$2 destination=$3 mode=$4 profile=$5 environment_profiles=$6 destination_resolved
+  ws_safe_token "$id" &&
+    valid_profile_tokens "$profile" &&
+    ws_valid_environment_profile_tokens "$environment_profiles" || return 1
   ws_profile_matches "$profile" "$PROFILE" "$OS" || return 0
+  ws_environment_profile_matches "$environment_profiles" "$WORKSTATION_PROFILE" || return 0
   validate_destination "$destination" || return 1
   case $mode in
     symlink)
@@ -588,17 +600,17 @@ PY
 }
 
 preflight_configs() {
-  local line fields id source destination mode profile row=0
+  local line fields id source destination mode profile environment_profiles row=0
   while IFS= read -r line || [ -n "$line" ]; do
     row=$((row + 1))
     case $line in id$'\t'*) continue ;; esac
     [ -n "$line" ] || continue
     fields=$(ws_tsv_to_unit_separator "$line")
-    IFS=$'\034' read -r id source destination mode profile <<EOF
+    IFS=$'\034' read -r id source destination mode profile environment_profiles <<EOF
 $fields
 EOF
-    [ -n "$profile" ] || return 1
-    preflight_mapping "$id" "$source" "$destination" "$mode" "$profile" || return 1
+    [ -n "$profile" ] && [ -n "$environment_profiles" ] || return 1
+    preflight_mapping "$id" "$source" "$destination" "$mode" "$profile" "$environment_profiles" || return 1
   done <"$CONFIG_SOURCES"
   [ "$row" -gt 1 ]
 }
@@ -992,16 +1004,17 @@ for key, value in src.items():
 
 
 process_configs() {
-  local line fields id source destination mode profile backup_path
+  local line fields id source destination mode profile environment_profiles backup_path
   local source_canonical destination_path destination_parent
   while IFS= read -r line || [ -n "$line" ]; do
     case $line in id$'\t'*) continue ;; esac
     [ -n "$line" ] || continue
     fields=$(ws_tsv_to_unit_separator "$line")
-    IFS=$'\034' read -r id source destination mode profile <<EOF
+    IFS=$'\034' read -r id source destination mode profile environment_profiles <<EOF
 $fields
 EOF
     ws_profile_matches "$profile" "$PROFILE" "$OS" || continue
+    ws_environment_profile_matches "$environment_profiles" "$WORKSTATION_PROFILE" || continue
     destination_paths "$destination" || return 1
     destination_path=$DESTINATION_PATH
     destination_parent=$DESTINATION_PARENT
@@ -1579,7 +1592,13 @@ if [ "$APPLY" -eq 1 ]; then
     linux) install_linux_packages || exit 1 ;;
   esac
 fi
-restore_menu_bar_settings || exit 1
+if environment_profile_allows_desktop; then
+  restore_menu_bar_settings || exit 1
+  restore_intellij_settings || exit 1
+  install_ide_extensions || exit 1
+else
+  printf 'SKIP desktop configuration for WORKSTATION_PROFILE=%s\n' "$WORKSTATION_PROFILE"
+fi
 ensure_kickstart || exit 1
 apply_kickstart_patch || {
   ws_die 'kickstart customization failed'
@@ -1587,8 +1606,6 @@ apply_kickstart_patch || {
 }
 ensure_ohmyzsh || exit 1
 ensure_vim || exit 1
-restore_intellij_settings || exit 1
-install_ide_extensions || exit 1
 process_configs || {
   ws_die 'bootstrap apply failed'
   exit 1

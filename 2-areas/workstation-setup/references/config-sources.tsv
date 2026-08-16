@@ -1,25 +1,25 @@
-id	source_relative_to_utils	destination_relative_to_home	mode	profile
-zshrc	.zshrc	.zshrc	symlink	base
-zshrc-work	.zshrc.work	.zshrc.work	symlink	work
-bashrc	.bashrc	.bashrc	symlink	base
-bashrc0-linux	4-archives/.bashrc0	.bashrc0	symlink	base@linux
-bashrc0-macos	4-archives/.bashrc0.mac	.bashrc0	symlink	base@macos
-gitconfig	.gitconfig	.gitconfig	manual-review	base
-gitconfig-local		.gitconfig.local	local	base
-tmux	.tmux.conf	.tmux.conf	symlink	base
-ghostty-macos	ghostty.config	Library/Application Support/com.mitchellh.ghostty/config	symlink	base@macos
-ghostty-linux	ghostty.config	.config/ghostty/config	symlink	base@linux
-nvim-custom	nvim-custom/lua/custom	.config/nvim/lua/custom	symlink	base
-vimrc	.vimrc	.vimrc	symlink	base
-kubectl-aliases	.kubectlAliases	.kubectlAliases	symlink	work
-gh-config	.config/gh/config.yml	.config/gh/config.yml	symlink	work
-herdr-title-watch	.local/bin/herdr-title-watch	.local/bin/herdr-title-watch	symlink	work
-hammerspoon	.hammerspoon	.hammerspoon	symlink	base@macos
-vscode-settings-macos	ide/vscode/settings.json	Library/Application Support/Code/User/settings.json	symlink	base@macos
-vscode-settings-linux	ide/vscode/settings.json	.config/Code/User/settings.json	symlink	base@linux
-cursor-settings-macos	ide/cursor/settings.json	Library/Application Support/Cursor/User/settings.json	symlink	base@macos
-cursor-settings-linux	ide/cursor/settings.json	.config/Cursor/User/settings.json	symlink	base@linux
-cursor-keybindings-macos	ide/cursor/keybindings.json	Library/Application Support/Cursor/User/keybindings.json	symlink	base@macos
-cursor-keybindings-linux	ide/cursor/keybindings.json	.config/Cursor/User/keybindings.json	symlink	base@linux
-claude-preferences	ai/claude/settings.json	.claude/settings.json	json-merge	base
-omp-preferences	ai/omp/preferences.json	.omp/agent/config.yml	omp-merge	base
+id	source_relative_to_utils	destination_relative_to_home	mode	profile	environment_profiles
+zshrc	.zshrc	.zshrc	symlink	base	personal|server|work
+zshrc-work	.zshrc.work	.zshrc.work	symlink	work	work
+bashrc	.bashrc	.bashrc	symlink	base	personal|server|work
+bashrc0-linux	4-archives/.bashrc0	.bashrc0	symlink	base@linux	personal|server|work
+bashrc0-macos	4-archives/.bashrc0.mac	.bashrc0	symlink	base@macos	personal|server|work
+gitconfig	.gitconfig	.gitconfig	manual-review	base	personal|server|work
+gitconfig-local		.gitconfig.local	local	base	personal|server|work
+tmux	.tmux.conf	.tmux.conf	symlink	base	personal|server|work
+ghostty-macos	ghostty.config	Library/Application Support/com.mitchellh.ghostty/config	symlink	base@macos	personal|work
+ghostty-linux	ghostty.config	.config/ghostty/config	symlink	base@linux	personal|work
+nvim-custom	nvim-custom/lua/custom	.config/nvim/lua/custom	symlink	base	personal|server|work
+vimrc	.vimrc	.vimrc	symlink	base	personal|server|work
+kubectl-aliases	.kubectlAliases	.kubectlAliases	symlink	work	work
+gh-config	.config/gh/config.yml	.config/gh/config.yml	symlink	work	work
+herdr-title-watch	.local/bin/herdr-title-watch	.local/bin/herdr-title-watch	symlink	work	work
+hammerspoon	.hammerspoon	.hammerspoon	symlink	base@macos	personal|work
+vscode-settings-macos	ide/vscode/settings.json	Library/Application Support/Code/User/settings.json	symlink	base@macos	personal|work
+vscode-settings-linux	ide/vscode/settings.json	.config/Code/User/settings.json	symlink	base@linux	personal|work
+cursor-settings-macos	ide/cursor/settings.json	Library/Application Support/Cursor/User/settings.json	symlink	base@macos	personal|work
+cursor-settings-linux	ide/cursor/settings.json	.config/Cursor/User/settings.json	symlink	base@linux	personal|work
+cursor-keybindings-macos	ide/cursor/keybindings.json	Library/Application Support/Cursor/User/keybindings.json	symlink	base@macos	personal|work
+cursor-keybindings-linux	ide/cursor/keybindings.json	.config/Cursor/User/keybindings.json	symlink	base@linux	personal|work
+claude-preferences	ai/claude/settings.json	.claude/settings.json	json-merge	base	personal|work
+omp-preferences	ai/omp/preferences.json	.omp/agent/config.yml	omp-merge	base	personal|work

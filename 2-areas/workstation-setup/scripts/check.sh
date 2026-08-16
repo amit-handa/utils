@@ -9,6 +9,7 @@ PACKAGE_DIR=$(CDPATH= cd -- "$SCRIPT_DIR/.." && pwd -P)
 
 OS=''
 PROFILE=''
+WORKSTATION_PROFILE=${WORKSTATION_PROFILE:-}
 UTILS_INPUT=${HOME:-}/utils
 
 usage_error() {
@@ -37,6 +38,10 @@ done
 
 case $OS in macos|linux) ;; *) usage_error ;; esac
 case $PROFILE in base|work|mobile) ;; *) usage_error ;; esac
+if [ -n "$WORKSTATION_PROFILE" ] &&
+   ! ws_valid_environment_profile "$WORKSTATION_PROFILE"; then
+  usage_error
+fi
 ws_command_exists python3 || { ws_die 'python3 is required for read-only checks'; exit 1; }
 
 realpath_any() {
@@ -350,18 +355,26 @@ report() {
 
 CHECK_FAILED=0
 ROW_COUNT=0
-while IFS=$'\034' read -r id source destination mode profiles; do
+while IFS=$'\034' read -r id source destination mode profiles environment_profiles; do
   [ "$id" = id ] && continue
   ROW_COUNT=$((ROW_COUNT + 1))
-  if ! ws_safe_tsv_field "$id" || ! ws_safe_tsv_field "$destination" || ! ws_safe_tsv_field "$mode" || ! ws_safe_tsv_field "$profiles" || { [ -n "$source" ] && ! ws_safe_tsv_field "$source"; }; then
+  if ! ws_safe_tsv_field "$id" ||
+     ! ws_safe_tsv_field "$destination" ||
+     ! ws_safe_tsv_field "$mode" ||
+     ! ws_safe_tsv_field "$profiles" ||
+     ! ws_safe_tsv_field "$environment_profiles" ||
+     { [ -n "$source" ] && ! ws_safe_tsv_field "$source"; }; then
     report UNSAFE configuration-catalog
     continue
   fi
-  if ! ws_safe_token "$id" || ! valid_profile_tokens "$profiles"; then
+  if ! ws_safe_token "$id" ||
+     ! valid_profile_tokens "$profiles" ||
+     ! ws_valid_environment_profile_tokens "$environment_profiles"; then
     report UNSAFE configuration-catalog
     continue
   fi
   ws_profile_matches "$profiles" "$PROFILE" "$OS" || continue
+  ws_environment_profile_matches "$environment_profiles" "$WORKSTATION_PROFILE" || continue
   if ! destination_preflight "$destination"; then
     report UNSAFE "$id"
     continue
