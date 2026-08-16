@@ -2,7 +2,7 @@
 
 ## Status
 
-Design ready for user spec review.
+Approved for implementation.
 
 ## Goal
 
