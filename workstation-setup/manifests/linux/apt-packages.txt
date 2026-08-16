@@ -1,0 +1,14 @@
+# Packages available from standard Debian/Ubuntu repositories.
+# Vendor repositories and authenticated work tools are documented separately.
+
+git
+tmux
+neovim
+vim
+curl
+python3
+python3-pip
+nodejs
+npm
+golang-go
+openjdk-21-jdk

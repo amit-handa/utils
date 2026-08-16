@@ -1,0 +1,23 @@
+id	source_relative_to_utils	destination_relative_to_home	mode	profile
+zshrc	.zshrc	.zshrc	symlink	base
+zshrc-work	.zshrc.work	.zshrc.work	symlink	work
+bashrc	.bashrc	.bashrc	symlink	base
+gitconfig	.gitconfig	.gitconfig	manual-review	base
+gitconfig-local		.gitconfig.local	local	base
+tmux	.tmux.conf	.tmux.conf	symlink	base
+ghostty-macos	ghostty.config	Library/Application Support/com.mitchellh.ghostty/config	symlink	base@macos
+ghostty-linux	ghostty.config	.config/ghostty/config	symlink	base@linux
+nvim-custom	nvim-custom/lua/custom	.config/nvim/lua/custom	symlink	base
+vimrc	.vimrc	.vimrc	symlink	base
+kubectl-aliases	.kubectlAliases	.kubectlAliases	symlink	work
+gh-config	.config/gh/config.yml	.config/gh/config.yml	symlink	work
+herdr-title-watch	.local/bin/herdr-title-watch	.local/bin/herdr-title-watch	symlink	work
+hammerspoon	.hammerspoon	.hammerspoon	symlink	base@macos
+vscode-settings-macos	ide/vscode/settings.json	Library/Application Support/Code/User/settings.json	symlink	base@macos
+vscode-settings-linux	ide/vscode/settings.json	.config/Code/User/settings.json	symlink	base@linux
+cursor-settings-macos	ide/cursor/settings.json	Library/Application Support/Cursor/User/settings.json	symlink	base@macos
+cursor-settings-linux	ide/cursor/settings.json	.config/Cursor/User/settings.json	symlink	base@linux
+cursor-keybindings-macos	ide/cursor/keybindings.json	Library/Application Support/Cursor/User/keybindings.json	symlink	base@macos
+cursor-keybindings-linux	ide/cursor/keybindings.json	.config/Cursor/User/keybindings.json	symlink	base@linux
+claude-preferences	ai/claude/settings.json	.claude/settings.json	json-merge	base
+omp-preferences	ai/omp/preferences.json	.omp/agent/config.yml	omp-merge	base

@@ -1,0 +1,30 @@
+id	display_name	category	command_candidates	app_candidates	config_roots	profiles
+intellij	IntelliJ IDEA	ide	idea	IntelliJ IDEA	macos=Library/Application Support/JetBrains|linux=.config/JetBrains	base
+vscode	Visual Studio Code	ide	code	Visual Studio Code	.vscode	base
+cursor	Cursor	ide	cursor	Cursor	.cursor	base
+neovim	Neovim	ide	nvim		.config/nvim	base
+vim	Vim	ide	vim:vi		.vim	base
+herdr	Herdr	session	herdr		.config/herdr	work
+omp	Oh My Pi	ai	omp		.omp	base
+claude-code	Claude Code	ai	claude	Claude	.claude	base
+codex	Codex	ai	codex		.codex	base
+copilot	GitHub Copilot	ai		GitHub Copilot	.config/github-copilot	base
+ghostty	Ghostty	terminal		Ghostty	macos=Library/Application Support/com.mitchellh.ghostty/config|linux=.config/ghostty/config	base@macos|base@linux
+tmux	tmux	terminal	tmux		.tmux.conf	base
+hammerspoon	Hammerspoon	window-utility		Hammerspoon	.hammerspoon	base@macos
+git	Git	developer	git:gst:gco:gd:gp:gl		.gitconfig	base
+brew	Homebrew	package-manager	brew			base@macos
+npm	npm	package-manager	npm		.npmrc	base
+devbox	Devbox	work	devbox		.devbox	work
+teleport	Teleport CLI	work	tsh		.tsh	work
+kubectl	kubectl	work	kubectl:k:kgpo:kgcmoyaml		.kube	work
+bazel	Bazel	work	bazel			work
+github-cli	GitHub CLI	work	gh		.config/gh	work
+android	Android tooling	mobile	adb:gradlew	Android Studio	.android	mobile
+xcode	Xcode and simulators	mobile	xcodebuild:simctl	Xcode	Library/Developer	mobile@macos
+java	Java and jenv	runtime	java:jenv		.jenv	base
+go	Go	runtime	go			base
+python	Python	runtime	python3			base
+node	Node and Bun	runtime	node:bun		.bun	base
+alt-tab	AltTab	menu-bar-utility		AltTab	macos=Library/Preferences/com.lwouis.alt-tab-macos.plist	base@macos
+maccy	Maccy	menu-bar-utility		Maccy	macos=Library/Containers/org.p0deje.Maccy/Data/Library/Preferences/org.p0deje.Maccy.plist	base@macos

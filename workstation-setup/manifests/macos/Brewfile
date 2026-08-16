@@ -1,0 +1,22 @@
+# Curated developer workstation packages. Internal/authenticated tools remain manual.
+
+brew "git" # profile:base
+brew "gh" # profile:work
+brew "tmux" # profile:base
+brew "neovim" # profile:base
+brew "go" # profile:base
+brew "python" # profile:base
+brew "node" # profile:base
+brew "bun" # profile:base
+brew "jenv" # profile:base
+brew "kubectl" # profile:work
+brew "bazelisk" # profile:work
+
+cask "intellij-idea" # profile:base
+cask "visual-studio-code" # profile:base
+cask "cursor" # profile:base
+cask "ghostty" # profile:base
+cask "hammerspoon" # profile:base@macos
+cask "android-studio" # profile:mobile@macos
+cask "alt-tab" # profile:base@macos
+cask "maccy" # profile:base@macos

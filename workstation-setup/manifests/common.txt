@@ -1,0 +1,37 @@
+# Shared catalog IDs intentionally carried to a new developer workstation.
+# This is desired state, not a dump of every observed package.
+
+# Shell, source control, terminal, and editors
+git
+tmux
+neovim
+vim
+github-cli
+
+# IDEs and desktop utilities
+intellij
+vscode
+cursor
+ghostty
+hammerspoon
+
+# Agent and session tooling
+herdr
+omp
+claude-code
+codex
+copilot
+
+# Language runtimes
+java
+go
+python
+node
+
+# Optional work and mobile profiles
+devbox
+teleport
+kubectl
+bazel
+android
+xcode

@@ -1,0 +1,6 @@
+id	constraint	notes
+java	21	Manage with jenv; keep identity and credentials local.
+go	current-stable	Use the platform package manager unless a project pins a version.
+python	3	Use project virtual environments for dependencies.
+node	lts	Use the active LTS line for general tooling.
+bun	current-stable	Install on supported platforms when required.
