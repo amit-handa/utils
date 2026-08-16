@@ -91,7 +91,6 @@ else
     start_agent;
 fi
 
-# echo "helllllo dear" | mailx -v -s "hello amit" -S smtp-use-starttls -S smtp="smtp.gmail.com" -S smtp-auth=login -S smtp-auth-user="amit.handa@geminisolutions.in" -S smtp-auth-password="81@mit06" -S from="amit.handa@geminisolutions.in(amit)" amit.handa@gmail.com
 #/usr/bin/ffmpeg -i PB045265.AVI -c:v libx264 -crf 20 -pix_fmt yuv420p -x264-params keyint=240:min-keyint=20 -preset:v slow -profile:v baseline -level 3.0 -c:a aac -b:a 160k -vbr 4 -strict -2 PB045265.AVI.mp4
 export PYTHONSTARTUP=~/.startup.py
 #rsync -rvlc -e 'ssh -p 2222' ./ 192.168.1.3:SDCard/Music/
