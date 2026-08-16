@@ -1,0 +1,16 @@
+{
+  "defaultThinkingLevel": "auto",
+  "theme.dark": "titanium",
+  "theme.light": "light",
+  "symbolPreset": "nerd",
+  "colorBlindMode": false,
+  "statusLine.preset": "nerd",
+  "statusLine.separator": "powerline-thin",
+  "statusLine.sessionAccent": true,
+  "statusLine.compactThinkingLevel": false,
+  "terminal.showProgress": false,
+  "tui.renderMermaid": true,
+  "tui.titleState": true,
+  "display.smoothStreaming": true,
+  "display.showTokenUsage": false
+}

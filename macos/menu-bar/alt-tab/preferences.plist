@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>appearanceSize</key>
+	<string>1</string>
+	<key>appearanceStyle</key>
+	<string>0</string>
+	<key>appsToShow</key>
+	<string>0</string>
+	<key>appsToShow10</key>
+	<string>0</string>
+	<key>crashPolicy</key>
+	<string>2</string>
+	<key>exceptions</key>
+	<string>[{"ignore":"0","hide":"1","bundleIdentifier":"com.McAfee.McAfeeSafariHost"},{"hide":"2","bundleIdentifier":"com.apple.finder","ignore":"0"},{"hide":"0","bundleIdentifier":"com.microsoft.rdc.macos","ignore":"2"},{"hide":"0","bundleIdentifier":"com.teamviewer.TeamViewer","ignore":"2"},{"hide":"0","bundleIdentifier":"org.virtualbox.app.VirtualBoxVM","ignore":"2"},{"bundleIdentifier":"com.parallels.","hide":"0","ignore":"2"},{"bundleIdentifier":"com.citrix.XenAppViewer","hide":"0","ignore":"2"},{"bundleIdentifier":"com.citrix.receiver.icaviewer.mac","hide":"0","ignore":"2"},{"bundleIdentifier":"com.nicesoftware.dcvviewer","hide":"0","ignore":"2"},{"bundleIdentifier":"com.vmware.fusion","hide":"0","ignore":"2"},{"bundleIdentifier":"com.apple.ScreenSharing","hide":"0","ignore":"2"},{"bundleIdentifier":"com.utmapp.UTM","hide":"0","ignore":"2"},{"bundleIdentifier":"org.hammerspoon.Hammerspoon","hide":"1","ignore":"0"},{"bundleIdentifier":"us.zoom.xos","hide":"1","ignore":"0"},{"hide":"1","bundleIdentifier":"io.tailscale.ipn.macsys","ignore":"0"},{"hide":"1","bundleIdentifier":"com.apple.Preview","ignore":"0"},{"hide":"2","bundleIdentifier":"com.cmuxterm.app","ignore":"0"},{"hide":"1","bundleIdentifier":"com.anthropic.claudefordesktop","ignore":"0"},{"hide":"1","bundleIdentifier":"com.apple.dt.Xcode","ignore":"0"},{"hide":"1","bundleIdentifier":"com.apple.Notes","ignore":"0"},{"hide":"1","bundleIdentifier":"com.proxyman.NSProxy","ignore":"0"},{"hide":"1","bundleIdentifier":"org.python.python","ignore":"0"},{"hide":"1","bundleIdentifier":"com.azul.zulu.java","ignore":"0"}]</string>
+	<key>nextWindowGesture</key>
+	<string>4</string>
+	<key>previewFocusedWindow</key>
+	<string>false</string>
+	<key>showFullscreenWindows</key>
+	<string>1</string>
+	<key>showFullscreenWindows10</key>
+	<string>1</string>
+	<key>showHiddenWindows</key>
+	<string>1</string>
+	<key>showHiddenWindows10</key>
+	<string>1</string>
+	<key>showMinimizedWindows</key>
+	<string>1</string>
+	<key>showMinimizedWindows10</key>
+	<string>1</string>
+	<key>spacesToShow</key>
+	<string>1</string>
+	<key>spacesToShow10</key>
+	<string>1</string>
+	<key>spacesToShow2</key>
+	<string>1</string>
+	<key>updatePolicy</key>
+	<string>2</string>
+	<key>windowOrder10</key>
+	<string>0</string>
+</dict>
+</plist>

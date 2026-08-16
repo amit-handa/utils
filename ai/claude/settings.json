@@ -1,0 +1,8 @@
+{
+  "model": "opusplan",
+  "autoCompactEnabled": false,
+  "autoCompactWindow": 100000,
+  "tui": "fullscreen",
+  "voice": {"enabled": true, "mode": "hold"},
+  "voiceEnabled": true
+}

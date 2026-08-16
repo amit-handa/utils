@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>KeyboardShortcuts_delete</key>
+	<string>{"carbonModifiers":2048,"carbonKeyCode":51}</string>
+	<key>KeyboardShortcuts_pin</key>
+	<string>{"carbonModifiers":2048,"carbonKeyCode":35}</string>
+	<key>KeyboardShortcuts_popup</key>
+	<string>{"carbonModifiers":768,"carbonKeyCode":8}</string>
+	<key>KeyboardShortcuts_togglePreview</key>
+	<string>{"carbonModifiers":4096,"carbonKeyCode":49}</string>
+	<key>NSStatusItem VisibleCC Item-1</key>
+	<false/>
+	<key>enabledPasteboardTypes</key>
+	<array>
+		<string>public.file-url</string>
+		<string>public.utf8-plain-text</string>
+		<string>public.html</string>
+		<string>public.rtf</string>
+		<string>public.heic</string>
+		<string>public.png</string>
+		<string>public.tiff</string>
+		<string>public.jpeg</string>
+	</array>
+	<key>pasteByDefault</key>
+	<true/>
+	<key>previewWidth</key>
+	<real>400.0</real>
+	<key>removeFormattingByDefault</key>
+	<true/>
+	<key>showFooter</key>
+	<true/>
+	<key>showSearch</key>
+	<true/>
+	<key>showTitle</key>
+	<true/>
+</dict>
+</plist>

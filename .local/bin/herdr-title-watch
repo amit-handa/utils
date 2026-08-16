@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+# herdr-title-watch — pin each herdr session's outer terminal window title to
+# that session's focused workspace label. Polls every socket once a second and
+# only calls `herdr terminal title set` when a session's focused label changes.
+#
+# Session-aware: herdr runs one server per named session
+# (~/.config/herdr/sessions/<name>/herdr.sock) plus a default headless server
+# (~/.config/herdr/herdr.sock). Each named session's terminal gets its OWN
+# focused-workspace label as its title, so every window reflects the workspace
+# focused inside it — regardless of how many sessions/windows are open.
+#
+# Singleton: zshrc launches at most one of these per machine.
+# Tolerates servers going away and coming back; never exits on its own.
+# Bash 3.2-safe (macOS /bin/bash): no associative arrays.
+
+set -u
+
+sessions_dir="$HOME/.config/herdr/sessions"
+
+# session key "" = the default/headless socket (no --session flag).
+discover_sessions() {
+  printf '%s\n' ''
+  [[ -d $sessions_dir ]] || return 0
+  local d
+  for d in "$sessions_dir"/*/; do
+    [[ -S ${d}herdr.sock ]] || continue
+    printf '%s\n' "$(basename "$d")"
+  done
+}
+
+# indexed arrays keyed in parallel; bash 3.2 has no assoc arrays.
+sess_names=()
+sess_labels=()
+idx_of() {  # print index of $1 in sess_names, or -1
+  local i key=$1
+  for ((i = 0; i < ${#sess_names[@]}; ++i)); do
+    [[ ${sess_names[i]} == "$key" ]] && { printf '%s' "$i"; return; }
+  done
+  printf -- '-1'
+}
+
+while true; do
+  while IFS= read -r s; do
+    if [[ -z $s ]]; then
+      list=$(herdr workspace list 2>/dev/null)
+      herdr_args=()
+    else
+      herdr_args=(--session "$s")
+      list=$(herdr "${herdr_args[@]}" workspace list 2>/dev/null)
+    fi
+    label=$(printf '%s' "$list" \
+      | jq -r '.result.workspaces[] | select(.focused).label // empty' 2>/dev/null)
+
+    [[ -n $label ]] || continue
+    i=$(idx_of "$s")
+    if (( i < 0 )); then
+      sess_names+=("$s")
+      sess_labels+=("")
+      i=$((${#sess_names[@]} - 1))
+    fi
+    prev=${sess_labels[i]:-}
+    if [[ $prev != "$label" ]]; then
+      if herdr ${herdr_args[@]+"${herdr_args[@]}"} terminal title set "$label" >/dev/null 2>&1; then
+        sess_labels[i]=$label
+      fi
+    fi
+  done < <(discover_sessions)
+  sleep 1
+done
