@@ -30,8 +30,8 @@ Create these files under the vault:
 - `2-areas/workstation-setup/references/config-sources.tsv` -- dotfile source-to-destination mappings.
 - `2-areas/workstation-setup/references/config-sources.md` -- human-readable mapping and sharing rules.
 - `2-areas/workstation-setup/references/related-notes.md` -- links to existing vault notes.
-- `2-areas/workstation-setup/inventory/current-machine.md` -- generated installed-state inventory.
-- `2-areas/workstation-setup/inventory/recent-usage.md` -- generated normalized seven-day usage inventory.
+- `$HOME/.workstation-setup/inventory/current-machine.md` -- generated installed-state inventory (outside the repository).
+- `$HOME/.workstation-setup/inventory/recent-usage.md` -- generated normalized seven-day usage inventory (outside the repository).
 - `2-areas/workstation-setup/scripts/lib.sh` -- shared argument, path, output, detection, and safety helpers.
 - `2-areas/workstation-setup/scripts/recent_usage.py` -- bounded history normalizer that emits names and dates only.
 - `2-areas/workstation-setup/scripts/snapshot.sh` -- package, app, runtime, config-footprint, and usage inventory generator.
@@ -251,8 +251,8 @@ git push origin master
 - Create: `2-areas/workstation-setup/manifests/macos/Brewfile`
 - Create: `2-areas/workstation-setup/manifests/linux/apt-packages.txt`
 - Create: `2-areas/workstation-setup/manifests/runtimes.txt`
-- Create: `2-areas/workstation-setup/inventory/current-machine.md`
-- Create: `2-areas/workstation-setup/inventory/recent-usage.md`
+- Output (outside repository): `$HOME/.workstation-setup/inventory/current-machine.md`
+- Output (outside repository): `$HOME/.workstation-setup/inventory/recent-usage.md`
 
 - [ ] **Step 1: Write fixture tests for non-package tools**
 
@@ -304,7 +304,7 @@ Support:
 --output-dir PATH
 ```
 
-Default `--since` to seven days and `--output-dir` to the package `inventory/` directory. Reject unknown operating systems, negative windows, and forbidden output paths. If `--utils-path` is absent, record the unavailable configuration source and continue package, application, runtime, and usage discovery.
+Default `--since` to seven days and `--output-dir` to `$HOME/.workstation-setup/inventory/`. Reject unknown operating systems, negative windows, and output paths inside the utils source tree. If `--utils-path` is absent, record the unavailable configuration source and continue package, application, runtime, and usage discovery.
 
 Collectors must run independently and continue when an optional source is unavailable:
 
@@ -337,10 +337,10 @@ Expected result: syntax checks exit 0 and the fixture test reports PASS without 
 ```bash
 bash 2-areas/workstation-setup/scripts/snapshot.sh \
   --os macos --since 7d --utils-path "$HOME/utils" \
-  --output-dir 2-areas/workstation-setup/inventory
+  --output-dir "$HOME/.workstation-setup/inventory"
 ```
 
-Review both generated files for the required IDEs, Herdr, Hammerspoon, OMP, terminal utilities, AI clients, work tools, language/mobile tools, and `Unclassified`. Remove any secret-like or machine-specific value before committing. Do not run bootstrap apply on the current machine.
+Review both generated files under `$HOME/.workstation-setup/inventory/` for the required IDEs, Herdr, Hammerspoon, OMP, terminal utilities, AI clients, work tools, language/mobile tools, and `Unclassified`. Remove any secret-like or machine-specific value before sharing the reports. Do not run bootstrap apply on the current machine.
 
 - [ ] **Step 8: Commit inventory implementation and reviewed manifests**
 
@@ -352,9 +352,7 @@ git add \
   2-areas/workstation-setup/manifests/common.txt \
   2-areas/workstation-setup/manifests/macos/Brewfile \
   2-areas/workstation-setup/manifests/linux/apt-packages.txt \
-  2-areas/workstation-setup/manifests/runtimes.txt \
-  2-areas/workstation-setup/inventory/current-machine.md \
-  2-areas/workstation-setup/inventory/recent-usage.md
+  2-areas/workstation-setup/manifests/runtimes.txt
 git commit -m "feat: inventory complete workstation toolset" -m "Discover GUI applications, IDEs, utilities, runtimes, package entries, configuration footprints, and bounded usage evidence." -m "Co-authored-by: oh-my-pi <https://omp.sh>"
 git push origin master
 ```
@@ -471,8 +469,7 @@ git push origin master
 - Modify: `2-areas/workstation-setup/README.md`
 - Modify: `2-areas/workstation-setup/profiles/*.md`
 - Modify: `2-areas/workstation-setup/references/*.md`
-- Modify: `2-areas/workstation-setup/inventory/current-machine.md`
-- Modify: `2-areas/workstation-setup/inventory/recent-usage.md`
+- Review generated snapshot output outside the repository at `$HOME/.workstation-setup/inventory/`
 
 - [ ] **Step 1: Run the complete fixture suite**
 
@@ -489,13 +486,13 @@ Expected result: all tests pass, including redaction, catalog coverage, dry-run 
 
 ```bash
 before_utils=$(git -C "$HOME/utils" status --short)
-bash 2-areas/workstation-setup/scripts/snapshot.sh --os macos --since 7d --utils-path "$HOME/utils" --output-dir 2-areas/workstation-setup/inventory
+bash 2-areas/workstation-setup/scripts/snapshot.sh --os macos --since 7d --utils-path "$HOME/utils" --output-dir "$HOME/.workstation-setup/inventory"
 bash 2-areas/workstation-setup/scripts/check.sh --os macos --profile base --utils-path "$HOME/utils"
 after_utils=$(git -C "$HOME/utils" status --short)
 test "$before_utils" = "$after_utils"
 ```
 
-Expected result: snapshot completes without writing to `~/utils`; check reports either `PASS` or explicit actionable drift. Review generated inventory for secret-like values and remove any before staging.
+Expected result: snapshot writes only to `$HOME/.workstation-setup/inventory/`, never to `~/utils`; check reports either `PASS` or explicit actionable drift. Review generated inventory for secret-like values before sharing it.
 
 - [ ] **Step 3: Verify the migration dry run on the current Mac**
 
@@ -522,9 +519,7 @@ git add \
   2-areas/workstation-setup/references/tool-catalog.tsv \
   2-areas/workstation-setup/references/config-sources.tsv \
   2-areas/workstation-setup/references/config-sources.md \
-  2-areas/workstation-setup/references/related-notes.md \
-  2-areas/workstation-setup/inventory/current-machine.md \
-  2-areas/workstation-setup/inventory/recent-usage.md
+  2-areas/workstation-setup/references/related-notes.md
 git commit -m "docs: document workstation migration workflow" -m "Finish the central setup guide after exercising inventory, bootstrap, and drift checks end to end." -m "Co-authored-by: oh-my-pi <https://omp.sh>"
 git push origin master
 ```

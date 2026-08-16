@@ -29,14 +29,14 @@ Existing active configuration paths remain root-level: `.zshrc`, `.zshrc.work`, 
 
 ## PARA classification
 
-- `2-areas/workstation-setup/` contains the complete workstation package: README, profiles, references, manifests, scripts, tests, and normalized inventory.
+- `2-areas/workstation-setup/` contains the complete workstation package: README, profiles, references, manifests, scripts, and tests. Snapshot reports are generated outside the utils source tree.
 - `3-resources/` contains durable reference material such as `ubuntu2mac.md`.
 - `4-archives/` contains legacy or superseded material: `.bashrc0`, `.bashrc0.mac`, the old root `init.lua`, and the legacy Redis utilities `client.py` and `redmon.py`.
 - `1-projects/` is reserved for bounded outcome-driven work and receives no unrelated runtime configuration.
 
 ## Workstation package migration
 
-The existing remote `workstation-setup/` package is merged with the `private notes vault/2-areas/workstation-setup/` package and moved to `2-areas/workstation-setup/`. The notes package supplies the complete README, profiles, human-readable references, manifests, scripts, tests, and inventory; the existing remote package supplies the already-relocated script hardening and real-source behavior.
+The existing remote `workstation-setup/` package is merged with the `private notes vault/2-areas/workstation-setup/` package and moved to `2-areas/workstation-setup/`. The notes package supplies the complete README, profiles, human-readable references, manifests, scripts, tests, and inventory workflow; the existing remote package supplies the already-relocated script hardening and real-source behavior. Generated reports remain external to the repository.
 
 All package-relative script references are updated for the new location. The scripts continue to resolve the actual dotfile source as `~/utils`, and `snapshot.sh` continues to default generated reports to `~/.workstation-setup/inventory` rather than writing machine state into the source repository.
 

@@ -2,7 +2,7 @@
 
 A shareable developer-workstation setup kit. It inventories all developer tools, keeps [`~/utils`](https://github.com/amit-handa/utils) as the single source of truth for actual dotfiles, and supports safe migration to another Mac or Debian/Ubuntu Linux machine — without exposing credentials, tokens, hostnames, or machine-specific state.
 
-This package is the **setup control plane**: it owns setup intent, profile documentation, manifests, migration instructions, inventory, and orchestration. Active runtime destinations remain the utils repository root and the corresponding `$HOME` paths; legacy Bash sources live under `4-archives/` and are exposed through root compatibility symlinks. This package does not create a second configuration tree.
+This package is the **setup control plane**: it owns setup intent, profile documentation, manifests, migration instructions, inventory generation, and orchestration. Snapshot reports are written to `$HOME/.workstation-setup/inventory/` by default and are not committed under `~/utils`. Active runtime destinations remain the utils repository root and the corresponding `$HOME` paths; legacy Bash sources live under `4-archives/` and are exposed through root compatibility symlinks. This package does not create a second configuration tree.
 
 > Package location: `2-areas/workstation-setup/`
 > Design: [`docs/superpowers/specs/2026-08-13-workstation-setup-design.md`](docs/superpowers/specs/2026-08-13-workstation-setup-design.md)
@@ -16,7 +16,7 @@ The kit manages **intent and orchestration**, not raw credentials:
 - **Configuration mappings** — [`references/config-sources.tsv`](references/config-sources.tsv) and [`references/config-sources.md`](references/config-sources.md) document which dotfiles come from `~/utils`, where they link in `$HOME`, and which profile owns each mapping.
 - **Profiles** — curated desired toolsets (see [Choose a profile](#choose-a-profile) below).
 - **Manifests** — desired package sets per platform in `manifests/common.txt`, `manifests/macos/Brewfile`, `manifests/linux/apt-packages.txt`, and `manifests/runtimes.txt`. Each macOS Brewfile entry carries a `# profile:<token>` selector used to generate the profile-filtered apply file.
-- **Inventory** — generated installed-state and recent-usage reports in `inventory/current-machine.md` and `inventory/recent-usage.md`.
+- **Inventory** — generated installed-state and recent-usage reports in `$HOME/.workstation-setup/inventory/` by default (override with `--output-dir`); reports are never written inside `~/utils`.
 - **Scripts** — `scripts/snapshot.sh` inventories observed state; `scripts/bootstrap.sh` installs the selected profile and applies safe configuration mappings. Shared helpers and focused fixtures live under `scripts/`.
 
 What the kit does **not** manage: credentials, tokens, private keys, Keychain contents, Kubernetes contexts, cloud profiles, cookies, caches, logs, databases, raw shell history, or machine identifiers. See [Privacy boundary](#privacy-boundary).
@@ -49,7 +49,7 @@ Each profile doc lists its included catalog IDs, platform prerequisites, manual 
 There is no background watcher. The explicit snapshot command is the update boundary and keeps changes reviewable. After installing, removing, or intentionally changing a developer tool:
 
 1. Run `scripts/snapshot.sh --os <macos|linux>` for the current platform. The default recent-usage window is the **last seven days**.
-2. Review both `inventory/current-machine.md` and `inventory/recent-usage.md`, including the `Unclassified` section.
+2. Review `$HOME/.workstation-setup/inventory/current-machine.md` and `$HOME/.workstation-setup/inventory/recent-usage.md`, including the `Unclassified` section.
 3. Add intentional tools to the appropriate desired profile or manifest.
 4. Update the configuration mapping or related-note links if needed.
 5. Run the dry-run bootstrap and `scripts/check.sh`.
@@ -123,7 +123,7 @@ The generated inventory groups discoveries so GUI applications and non-package u
 
 Use these focused commands:
 
-- `scripts/snapshot.sh --os <macos|linux>` — generate the normalized inventory and recent-usage reports (read-only; never modifies `~/utils` or credential locations).
+- `scripts/snapshot.sh --os <macos|linux>` — generate normalized inventory and recent-usage reports under `$HOME/.workstation-setup/inventory/` by default; use `--output-dir` for another safe location (read-only; never modifies `~/utils` or credential locations).
 - `scripts/bootstrap.sh --os <macos|linux> --profile <base|work|mobile> [--utils-path PATH] [--apply]` — dry-run-first profile installer and configuration linker. `base` entries are inherited by `work` and `mobile`; vendor packages and authentication remain manual.
 - `bash scripts/tests/test_bootstrap.sh` — exercise dry-run invariants, profile filtering, package-manager arguments, backups, local-file permissions, fail-closed preflight, and redaction.
 
