@@ -21,6 +21,11 @@ The target Linux host currently runs these application or service workloads:
 - Samba (`smbd`/`nmbd`) under systemd.
 - x11vnc under systemd.
 
+Two additional enabled systemd units are currently failed/stale and must remain visible for manual review:
+
+- Photoview (`photoview.service`) with a Docker Compose launch unit.
+- vsftpd (`vsftpd.service`) with the packaged FTP daemon unit.
+
 Docker, SSH, cron, logging, containerd, Docker itself, desktop/session services, and other OS infrastructure are not application synchronization targets. They remain installation or host-operations concerns.
 
 ## Non-goals and privacy boundary
@@ -77,6 +82,8 @@ id  manager  probe  artifact  destination_key  policy  excluded_classes
 | MariaDB | systemd | manual-review | No automatic artifact | database files, users, grants, credentials, logs |
 | Samba | systemd | manual-review | No automatic artifact | account database, share ACLs, host-specific shares and credentials |
 | x11vnc | systemd | manual-review | No automatic artifact | passwords, display/session state, machine-specific service overrides |
+| Photoview | systemd | manual-review | No automatic artifact | Compose file, env, media, database, logs |
+| vsftpd | systemd | manual-review | No automatic artifact | config, credentials, certificates, logs, user data |
 
 ## Command and data flow
 
@@ -134,7 +141,7 @@ The existing workstation profile suite remains required. `server-sync.sh --inven
 ## Acceptance criteria
 
 - `WORKSTATION_PROFILE=server` continues to pass the existing profile tests unchanged.
-- The service inventory covers Apache2, Syncthing, Immich, Home Assistant, Mosquitto, MariaDB, Samba, and x11vnc.
+- The service inventory covers Apache2, Syncthing, Immich, Home Assistant, Mosquitto, MariaDB, Samba, x11vnc, Photoview, and vsftpd.
 - Portable templates contain no raw service configuration or sensitive runtime state.
 - Dry-run output is deterministic and mutation-free.
 - Apply requires explicit `--apply`, validates before mutation, backs up only declared config files, and never restarts services or touches excluded state.
