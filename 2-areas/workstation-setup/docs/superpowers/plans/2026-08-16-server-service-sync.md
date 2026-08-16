@@ -65,10 +65,10 @@ Create fake command outputs without executing systemd or Docker:
 cat >"$BIN_DIR/systemctl" <<'SH'
 #!/bin/sh
 case "$*" in
-  *'is-active apache2'*) printf 'active\n'; exit 0 ;;
-  *'--user is-active syncthing'*) printf 'active\n'; exit 0 ;;
-  *'is-active photoview'*) printf 'failed\n'; exit 3 ;;
-  *'is-active vsftpd'*) printf 'failed\n'; exit 3 ;;
+ *'is-active --quiet apache2'*) printf 'active\n'; exit 0 ;;
+ *'--user is-active --quiet syncthing'*) printf 'active\n'; exit 0 ;;
+ *'is-active --quiet photoview'*) printf 'failed\n'; exit 3 ;;
+ *'is-active --quiet vsftpd'*) printf 'failed\n'; exit 3 ;;
   *) printf 'inactive\n'; exit 3 ;;
 esac
 SH
