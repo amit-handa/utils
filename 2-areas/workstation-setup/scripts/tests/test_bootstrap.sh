@@ -23,6 +23,7 @@ mkdir -p "$HOME_DIR/.config/nvim/.git" "$HOME_DIR/.config/nvim/lua/custom" \
   "$UTILS_DIR/ide/intellij/options" "$OUTSIDE_DIR" "$BIN_DIR" \
   "$UTILS_DIR/macos/menu-bar/alt-tab" "$UTILS_DIR/macos/menu-bar/maccy" \
   "$UTILS_DIR/ai/claude" "$UTILS_DIR/ai/omp" \
+  "$UTILS_DIR/4-archives" \
   "$HOME_DIR/.claude" "$HOME_DIR/.omp/agent"
 printf '%s\n' "-- require 'custom.plugins'" >"$HOME_DIR/.config/nvim/init.lua"
 "$REAL_GIT" -C "$HOME_DIR/.config/nvim" init -q
@@ -32,6 +33,8 @@ printf '%s\n' '# safe work zshrc' >"$UTILS_DIR/.zshrc.work"
 printf '%s\n' '# safe herdr title watcher' >"$UTILS_DIR/.local/bin/herdr-title-watch"
 chmod +x "$UTILS_DIR/.local/bin/herdr-title-watch"
 printf '%s\n' '# safe bashrc' >"$UTILS_DIR/.bashrc"
+echo '# safe bashrc legacy' >"$UTILS_DIR/4-archives/.bashrc0"
+echo '# safe bashrc mac legacy' >"$UTILS_DIR/4-archives/.bashrc0.mac"
 printf '%s\n' '# safe tmux' >"$UTILS_DIR/.tmux.conf"
 printf '%s\n' '# safe ghostty' >"$UTILS_DIR/ghostty.config"
 printf '%s\n' '{"editor.minimap.enabled": false}' >"$UTILS_DIR/ide/vscode/settings.json"
@@ -425,6 +428,7 @@ assert_link "$HOME_DIR/.zshrc.work" "$UTILS_DIR/.zshrc.work"
 assert_link "$HOME_DIR/.local/bin/herdr-title-watch" "$UTILS_DIR/.local/bin/herdr-title-watch"
 assert_link "$HOME_DIR/.zshrc" "$UTILS_DIR/.zshrc"
 assert_link "$HOME_DIR/.bashrc" "$UTILS_DIR/.bashrc"
+assert_link "$HOME_DIR/.bashrc0" "$UTILS_DIR/4-archives/.bashrc0.mac"
 assert_link "$HOME_DIR/.tmux.conf" "$UTILS_DIR/.tmux.conf"
 assert_link "$HOME_DIR/.config/nvim/lua/custom" "$UTILS_DIR/nvim-custom/lua/custom"
 assert_contains "$(cat "$HOME_DIR/.config/nvim/init.lua")" "require 'custom.plugins'"
@@ -529,6 +533,8 @@ assert_not_contains "$LINUX_DRY" '# Packages available'
 assert_not_contains "$LINUX_DRY" 'alt-tab'
 assert_not_contains "$LINUX_DRY" 'maccy'
 assert_not_contains "$LINUX_DRY" 'MENU_BAR'
+assert_contains "$LINUX_DRY" 'PLAN LINK $HOME/.bashrc0 <- $UTILS/4-archives/.bashrc0'
+assert_not_contains "$LINUX_DRY" '$UTILS/4-archives/.bashrc0.mac'
 
 run_unsafe_git_case() {
     name=$1

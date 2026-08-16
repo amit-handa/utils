@@ -18,13 +18,15 @@ mkdir -p "$HOME_DIR/.config/ghostty" "$HOME_DIR/.config/nvim/.git" \
   "$UTILS_DIR/nvim-custom/lua/custom/plugins" "$UTILS_DIR/.config/gh" \
   "$UTILS_DIR/.local/bin" "$UTILS_DIR/.hammerspoon" "$UTILS_DIR/ide/vscode" \
   "$UTILS_DIR/ide/cursor" "$OUTSIDE_DIR" "$BIN_DIR" \
-  "$UTILS_DIR/ai/claude" "$UTILS_DIR/ai/omp"
+  "$UTILS_DIR/ai/claude" "$UTILS_DIR/ai/omp" "$UTILS_DIR/4-archives"
 
 printf '%s\n' '# safe zshrc' >"$UTILS_DIR/.zshrc"
 printf '%s\n' '# safe work zshrc' >"$UTILS_DIR/.zshrc.work"
 printf '%s\n' '# safe herdr title watcher' >"$UTILS_DIR/.local/bin/herdr-title-watch"
 chmod +x "$UTILS_DIR/.local/bin/herdr-title-watch"
 printf '%s\n' '# safe bashrc' >"$UTILS_DIR/.bashrc"
+echo '# safe bashrc legacy' >"$UTILS_DIR/4-archives/.bashrc0"
+echo '# safe bashrc mac legacy' >"$UTILS_DIR/4-archives/.bashrc0.mac"
 printf '%s\n' '# safe tmux' >"$UTILS_DIR/.tmux.conf"
 printf '%s\n' '# safe ghostty' >"$UTILS_DIR/ghostty.config"
 printf '%s\n' '{"editor.minimap.enabled": false}' >"$UTILS_DIR/ide/vscode/settings.json"
@@ -83,6 +85,7 @@ link_all_macos() {
   ln -s "$UTILS_DIR/.zshrc" "$HOME_DIR/.zshrc"
   ln -s "$UTILS_DIR/.zshrc.work" "$HOME_DIR/.zshrc.work"
   ln -s "$UTILS_DIR/.bashrc" "$HOME_DIR/.bashrc"
+  ln -s "$UTILS_DIR/4-archives/.bashrc0.mac" "$HOME_DIR/.bashrc0"
   ln -s "$UTILS_DIR/.tmux.conf" "$HOME_DIR/.tmux.conf"
   ln -s "$UTILS_DIR/ghostty.config" "$HOME_DIR/.config/ghostty/config"
   ln -s "$UTILS_DIR/ghostty.config" "$HOME_DIR/Library/Application Support/com.mitchellh.ghostty/config"
@@ -111,6 +114,7 @@ assert_not_contains() {
 SAFE_OUTPUT=$(HOME="$HOME_DIR" PATH="$BIN_DIR:$PATH" bash "$CHECK" --os macos --profile work --utils-path "$UTILS_DIR" 2>&1)
 assert_contains "$SAFE_OUTPUT" 'OK zshrc'
 assert_contains "$SAFE_OUTPUT" 'OK zshrc-work'
+assert_contains "$SAFE_OUTPUT" 'OK bashrc0-macos'
 assert_contains "$SAFE_OUTPUT" 'OK kickstart'
 assert_contains "$SAFE_OUTPUT" 'OK herdr-title-watch'
 assert_contains "$SAFE_OUTPUT" 'OK nvim-custom'

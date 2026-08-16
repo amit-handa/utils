@@ -29,16 +29,16 @@
 
 ### Task 3: Move and merge workstation-setup
 
-- Merge the existing remote `workstation-setup/` package with the complete package from the local `amit-notes` worktree.
+- Merge the existing remote `workstation-setup/` package with the complete package from the local `private notes vault` worktree.
 - Place the merged package at `2-areas/workstation-setup/`.
 - Preserve the hardened remote script variants: safe snapshot output, real-source validation, Bash/Linux test portability, and current metadata.
-- Move relevant existing `docs/superpowers` workstation specs into the relocated package or update links so no `amit-notes` paths remain.
+- Move relevant existing `docs/superpowers` workstation specs into the relocated package or update links so no `private notes vault` paths remain.
 - Remove the old root `workstation-setup/` directory only after all files are present in the new location.
 
 ### Task 4: Update paths and links
 
 - Update script-relative package paths only where required by the new directory.
-- Update README, references, profiles, and related-note links from `knowledge/workstation-setup` or `amit-notes` to `2-areas/workstation-setup`.
+- Update README, references, profiles, and related-note links from `2-areas/workstation-setup` or `private notes vault` to `2-areas/workstation-setup`.
 - Keep `~/utils` as the source root for all config mappings.
 - Keep snapshot default output outside the repository at `~/.workstation-setup/inventory`.
 

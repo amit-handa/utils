@@ -2,6 +2,8 @@ id	source_relative_to_utils	destination_relative_to_home	mode	profile
 zshrc	.zshrc	.zshrc	symlink	base
 zshrc-work	.zshrc.work	.zshrc.work	symlink	work
 bashrc	.bashrc	.bashrc	symlink	base
+bashrc0-linux	4-archives/.bashrc0	.bashrc0	symlink	base@linux
+bashrc0-macos	4-archives/.bashrc0.mac	.bashrc0	symlink	base@macos
 gitconfig	.gitconfig	.gitconfig	manual-review	base
 gitconfig-local		.gitconfig.local	local	base
 tmux	.tmux.conf	.tmux.conf	symlink	base

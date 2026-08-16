@@ -2,7 +2,7 @@
 
 ## Goal
 
-Reorganize the remote `~/utils` repository into the numbered PARA layout while moving the complete workstation-setup control plane from `amit-notes` into the utils repository, without breaking active shell, editor, AI, or menu-bar configuration paths.
+Reorganize the remote `~/utils` repository into the numbered PARA layout while moving the complete workstation-setup control plane from `private notes vault` into the utils repository, without breaking active shell, editor, AI, or menu-bar configuration paths.
 
 ## Constraints
 
@@ -36,11 +36,11 @@ Existing active configuration paths remain root-level: `.zshrc`, `.zshrc.work`, 
 
 ## Workstation package migration
 
-The existing remote `workstation-setup/` package is merged with the `amit-notes/knowledge/workstation-setup/` package and moved to `2-areas/workstation-setup/`. The notes package supplies the complete README, profiles, human-readable references, manifests, scripts, tests, and inventory; the existing remote package supplies the already-relocated script hardening and real-source behavior.
+The existing remote `workstation-setup/` package is merged with the `private notes vault/2-areas/workstation-setup/` package and moved to `2-areas/workstation-setup/`. The notes package supplies the complete README, profiles, human-readable references, manifests, scripts, tests, and inventory; the existing remote package supplies the already-relocated script hardening and real-source behavior.
 
 All package-relative script references are updated for the new location. The scripts continue to resolve the actual dotfile source as `~/utils`, and `snapshot.sh` continues to default generated reports to `~/.workstation-setup/inventory` rather than writing machine state into the source repository.
 
-Internal links that previously pointed into `amit-notes` are rewritten to the new utils PARA paths. The old root-level `workstation-setup/` directory is removed after the relocated package passes verification.
+Internal links that previously pointed into `private notes vault` are rewritten to the new utils PARA paths. The old root-level `workstation-setup/` directory is removed after the relocated package passes verification.
 
 ## Compatibility and safety
 
