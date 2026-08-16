@@ -1,6 +1,6 @@
 # Configuration sources
 
-The existing public dotfiles repository at [`~/utils`](https://github.com/amit-handa/utils) is the **single source of truth** for actual configuration files. This package keeps active runtime configuration at the utils root and never creates a second configuration tree that can drift. The repository stores the mappings below and the rules for applying them safely.
+The existing public dotfiles repository at [`~/utils`](https://github.com/amit-handa/utils) is the **single source of truth** for actual configuration files. Active runtime destinations remain the root-facing `$HOME` paths; most source files live at the utils root, while the superseded Bash sources are stored under `4-archives/` and exposed through root compatibility symlinks. This package never creates a second configuration tree that can drift. The repository stores the mappings below and the rules for applying them safely.
 
 `bootstrap.sh` resolves each mapping's source path relative to `--utils-path` (default `~/utils`) and its destination relative to the target `$HOME`. It validates source existence and destination safety before creating any link, and it backs up an existing destination into a timestamped setup backup directory before replacing it. Without `--apply`, every action is printed as a dry-run plan and nothing is changed.
 
