@@ -129,6 +129,22 @@ assert_contains "$SAFE_OUTPUT" 'OK claude-preferences'
 assert_contains "$SAFE_OUTPUT" 'OK omp-preferences'
 assert_not_contains "$SAFE_OUTPUT" 'secret-placeholder-value'
 [ -f "$HOME_DIR/sentinel" ] || exit 1
+SERVER_CHECK=$(HOME="$HOME_DIR" PATH="$BIN_DIR:$PATH" \
+  WORKSTATION_PROFILE=server \
+  bash "$CHECK" --os macos --profile base --utils-path "$UTILS_DIR" 2>&1 || true)
+assert_contains "$SERVER_CHECK" 'OK zshrc'
+assert_not_contains "$SERVER_CHECK" 'hammerspoon'
+assert_not_contains "$SERVER_CHECK" 'claude-preferences'
+assert_not_contains "$SERVER_CHECK" 'kubectl-aliases'
+
+if HOME="$HOME_DIR" PATH="$BIN_DIR:$PATH" WORKSTATION_PROFILE=unknown \
+  bash "$CHECK" --os macos --profile base --utils-path "$UTILS_DIR" \
+  >"$FIXTURE/invalid-check-profile.out" 2>&1; then
+  printf 'invalid WORKSTATION_PROFILE unexpectedly passed check\n' >&2
+  exit 1
+fi
+assert_contains "$(cat "$FIXTURE/invalid-check-profile.out")" 'invalid check arguments'
+
 
 rm "$HOME_DIR/.zshrc"
 ln -s "$OUTSIDE_DIR/missing" "$HOME_DIR/.zshrc"

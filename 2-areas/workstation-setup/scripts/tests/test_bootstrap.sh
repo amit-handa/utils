@@ -398,6 +398,46 @@ assert_contains "$WORK_PACKAGES" 'git'
 assert_contains "$WORK_PACKAGES" 'kubectl'
 MOBILE_PACKAGES=$(HOME="$HOME_DIR" PATH="$BIN_DIR:$PATH" bash "$BOOTSTRAP" --os macos --profile mobile --utils-path "$UTILS_DIR" 2>&1)
 assert_contains "$MOBILE_PACKAGES" 'android-studio'
+PERSONAL_DRY=$(HOME="$HOME_DIR" PATH="$BIN_DIR:$PATH" \
+  WORKSTATION_PROFILE=personal \
+  bash "$BOOTSTRAP" --os macos --profile base --utils-path "$UTILS_DIR" 2>&1)
+assert_contains "$PERSONAL_DRY" 'PLAN LINK $HOME/.zshrc <- $UTILS/.zshrc'
+assert_contains "$PERSONAL_DRY" 'PLAN LINK $HOME/Library/Application Support/Code/User/settings.json'
+assert_not_contains "$PERSONAL_DRY" '$HOME/.kubectlAliases'
+
+SERVER_DRY=$(HOME="$HOME_DIR" PATH="$BIN_DIR:$PATH" \
+  WORKSTATION_PROFILE=server \
+  bash "$BOOTSTRAP" --os linux --profile base --utils-path "$UTILS_DIR" 2>&1)
+assert_contains "$SERVER_DRY" 'PLAN LINK $HOME/.zshrc <- $UTILS/.zshrc'
+assert_contains "$SERVER_DRY" 'PLAN LINK $HOME/.tmux.conf <- $UTILS/.tmux.conf'
+assert_not_contains "$SERVER_DRY" '$HOME/.hammerspoon'
+assert_not_contains "$SERVER_DRY" '$HOME/.claude/settings.json'
+assert_not_contains "$SERVER_DRY" '$HOME/.kubectlAliases'
+
+WORK_DRY=$(HOME="$HOME_DIR" PATH="$BIN_DIR:$PATH" \
+  WORKSTATION_PROFILE=work \
+  bash "$BOOTSTRAP" --os macos --profile work --utils-path "$UTILS_DIR" 2>&1)
+assert_contains "$WORK_DRY" '$HOME/.kubectlAliases'
+assert_contains "$WORK_DRY" '$HOME/.config/gh/config.yml'
+assert_contains "$WORK_DRY" '$HOME/.local/bin/herdr-title-watch'
+
+if HOME="$HOME_DIR" PATH="$BIN_DIR:$PATH" WORKSTATION_PROFILE=unknown \
+  bash "$BOOTSTRAP" --os linux --profile base --utils-path "$UTILS_DIR" \
+  >"$FIXTURE/invalid-profile.out" 2>&1; then
+  printf 'invalid WORKSTATION_PROFILE unexpectedly passed\n' >&2
+  exit 1
+fi
+assert_contains "$(cat "$FIXTURE/invalid-profile.out")" 'invalid bootstrap arguments'
+
+SERVER_MAC_DRY=$(HOME="$HOME_DIR" PATH="$BIN_DIR:$PATH" \
+  WORKSTATION_PROFILE=server \
+  bash "$BOOTSTRAP" --os macos --profile base --utils-path "$UTILS_DIR" 2>&1)
+assert_not_contains "$SERVER_MAC_DRY" '$HOME/.config/Code/User/settings.json'
+assert_not_contains "$SERVER_MAC_DRY" '$HOME/Library/Application Support/Code/User/settings.json'
+assert_not_contains "$SERVER_MAC_DRY" 'PLAN MENU_BAR'
+assert_not_contains "$SERVER_MAC_DRY" 'PLAN IDE'
+assert_not_contains "$SERVER_MAC_DRY" 'PLAN PREREQ code extensions'
+assert_not_contains "$SERVER_MAC_DRY" 'PLAN PREREQ cursor extensions'
 
 printf '%s\n' 'pre-existing alt-tab preference' \
   >"$HOME_DIR/Library/Preferences/com.lwouis.alt-tab-macos.plist"

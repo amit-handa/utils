@@ -164,6 +164,10 @@ MAC_OUT="$FIXTURE/out-macos"
 run_snapshot macos "$MAC_OUT"
 MAC_CURRENT=$(cat "$MAC_OUT/current-machine.md")
 MAC_RECENT=$(cat "$MAC_OUT/recent-usage.md")
+CONFIG_SECTION=$(section_content "$MAC_CURRENT" 'Configuration sources')
+assert_contains "$CONFIG_SECTION" '| zshrc |'
+assert_contains "$CONFIG_SECTION" '| base |'
+assert_not_contains "$CONFIG_SECTION" 'personal|server|work'
 for expected in 'IntelliJ IDEA' 'Visual Studio Code' 'Cursor' 'Herdr' \
   'Hammerspoon' 'Oh My Pi' 'Ghostty' 'Claude Code' 'Codex' \
   'GitHub CLI' 'Android tooling' 'Xcode and simulators' \
