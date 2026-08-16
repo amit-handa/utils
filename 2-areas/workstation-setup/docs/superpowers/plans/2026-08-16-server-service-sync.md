@@ -697,7 +697,7 @@ bash scripts/tests/test_bootstrap.sh
 bash scripts/tests/test_snapshot.sh
 ```
 
-Expected: all five Python tests pass, followed by PASS output from the environment, check, bootstrap, and snapshot fixtures.
+Expected: the Python recent-usage test passes, followed by PASS output from the environment, check, bootstrap, and snapshot fixtures.
 
 - [ ] **Step 3: Smoke-test inventory on the target server**
 
