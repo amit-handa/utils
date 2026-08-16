@@ -311,7 +311,7 @@ services:
 `server/templates/compose/homeassistant/compose.yaml`:
 
 ```yaml
-name: homeassistant
+name: ha2
 services:
   homeassistant:
     image: ghcr.io/home-assistant/home-assistant:stable
