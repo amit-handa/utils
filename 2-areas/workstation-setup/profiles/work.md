@@ -1,6 +1,6 @@
 # Work profile
 
-The **work** profile is opt-in and layers on top of [base](base.md). It adds work-oriented developer commands — Devbox, Teleport CLI, Kubernetes tooling, Bazel, GitHub CLI, and Herdr — **without** any authentication state. Work endpoints, user identifiers, cluster names, and tokens are never included.
+The **work** package profile is opt-in and layers on top of [base](base.md). It adds work-oriented developer commands — Devbox, Teleport CLI, Kubernetes tooling, Bazel, GitHub CLI, and Herdr — **without** any authentication state. The optional `WORKSTATION_PROFILE=work` selector applies the personal-compatible configuration set plus work mappings; work endpoints, user identifiers, cluster names, and tokens are never included.
 
 ## Included catalog IDs
 
@@ -9,7 +9,7 @@ From [`references/tool-catalog.tsv`](../references/tool-catalog.tsv), the work p
 - **Work CLI tools:** `devbox`, `teleport`, `kubectl`, `bazel`, `github-cli`
 - **Session utility (work-scoped):** `herdr`
 
-`kubectl` carries the alias command candidates `k`, `kgpo`, and `kgcmoyaml`. These aliases live in `~/utils/.kubectlAliases`, which the `work` profile links into `$HOME` (see below). The alias file contains no cluster or credential data.
+`kubectl` carries the alias command candidates `k`, `kgpo`, and `kgcmoyaml`. These aliases live in `~/utils/.kubectlAliases`, which the `work` package profile and `WORKSTATION_PROFILE=work` environment link into `$HOME` (see below). The alias file contains no cluster or credential data.
 
 ## Platform prerequisites
 
@@ -20,11 +20,11 @@ GitHub CLI (`gh`) is named in this profile's intent; a future manifest entry wil
 
 ## Configuration sources
 
-The work profile adds one mapping on top of base (see [`references/config-sources.md`](../references/config-sources.md)):
+The work package profile adds one mapping on top of base (see [`references/config-sources.md`](../references/config-sources.md)). When `WORKSTATION_PROFILE=work` is set, mappings declared for both `personal` and `work` are selected, so shared shell/editor mappings and work-only mappings are available together:
 
-- `.kubectlAliases` → `$HOME/.kubectlAliases` (symlink, `work` profile only)
+- `.kubectlAliases` → `$HOME/.kubectlAliases` (symlink, `work` environment only)
 
-It deliberately does **not** map `~/.kube/config`. Cluster credentials and contexts are a manual handoff (see below).
+It deliberately does **not** map `~/.kube/config`. Cluster credentials and contexts are a manual handoff. Unset `WORKSTATION_PROFILE` preserves the legacy mapping behavior.
 
 ## Manual authentication and licensing handoffs
 

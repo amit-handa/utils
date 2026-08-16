@@ -4,7 +4,7 @@ The existing public dotfiles repository at [`~/utils`](https://github.com/amit-h
 
 `bootstrap.sh` resolves each mapping's source path relative to `--utils-path` (default `~/utils`) and its destination relative to the target `$HOME`. It validates source existence and destination safety before creating any link, and it backs up an existing destination into a timestamped setup backup directory before replacing it. Without `--apply`, every action is printed as a dry-run plan and nothing is changed.
 
-The machine-readable mapping is [`config-sources.tsv`](config-sources.tsv). Columns are `id`, `source_relative_to_utils`, `destination_relative_to_home`, `mode`, `profile`.
+The machine-readable mapping is [`config-sources.tsv`](config-sources.tsv). Columns are `id`, `source_relative_to_utils`, `destination_relative_to_home`, `mode`, `profile`, `environment_profiles`.
 
 ## Profile selector grammar
 
@@ -26,7 +26,26 @@ Matching rules for scripts:
 - **Inheritance:** `base` and `base@platform` entries are inherited by `work` and `mobile` selections, because those profiles layer on top of base. A `--profile work` run applies every `base`/`base@platform` mapping plus every `work`/`work@platform` mapping; a `--profile mobile` run applies every `base`/`base@platform` mapping plus every `mobile`/`mobile@platform` mapping. `work` and `mobile` tokens are additions, not replacements. These matching rules are identical to the tool-catalog grammar in the [README](../README.md#catalog-grammar).
 - A mapping whose profile token does not match the request is skipped (not an error).
 
-This keeps the table at five columns while making platform selection data-driven: the macOS and Linux Ghostty destinations are separate explicit rows rather than a single row with conditional prose.
+## Environment profile selector grammar
+
+The `environment_profiles` column is a required pipe-separated allowlist containing one or more of `personal`, `server`, and `work`. It is independent from the existing package/platform `profile` selector.
+
+| Token | Meaning |
+| --- | --- |
+| `personal` | Personal desktop and developer configuration, including GUI settings, Hammerspoon, and portable Claude Code/OMP preferences. |
+| `server` | Shell/editor configuration suitable for a server; excludes GUI, Hammerspoon, AI-agent, and work mappings. |
+| `work` | The personal-compatible mapping set plus work-only aliases, GitHub CLI preferences, and Herdr configuration. |
+
+Matching rules:
+
+- An unset or empty `WORKSTATION_PROFILE` adds no environment filter and preserves the existing behavior.
+- When set, a mapping must match both `profile`/`--os` and `environment_profiles`/`WORKSTATION_PROFILE`; the package/profile and platform constraints are always enforced first.
+- Invalid environment values or malformed/missing metadata fail closed before bootstrap mutation. `snapshot.sh` parses the field but remains an all-source inventory.
+- For `server`, bootstrap skips menu-bar, IntelliJ, and IDE-extension actions before probing or mutating desktop state.
+- `.zshrc`, the archived Bash compatibility sources, and their work aliases/completions independently guard work-only runtime loading for `personal` and `server`.
+
+
+This six-column table keeps platform selection data-driven while adding an explicit environment membership field: the macOS and Linux Ghostty destinations remain separate rows rather than a single row with conditional prose.
 
 The tool catalog's `config_roots` column uses a single `$HOME`-relative path when the same path applies on all platforms, or a `platform=value|platform=value` encoding when a tool's config footprint differs by platform (e.g. Ghostty and IntelliJ). See the [README Catalog grammar](../README.md#catalog-grammar) for the `config_roots` resolution rule.
 
@@ -50,42 +69,43 @@ The tool catalog's `config_roots` column uses a single `$HOME`-relative path whe
   - *bootstrap:* validates the source against a strict 14-key dotted allowlist (`defaultThinkingLevel`, `theme.dark`, `theme.light`, `symbolPreset`, `colorBlindMode`, `statusLine.preset`, `statusLine.separator`, `statusLine.sessionAccent`, `statusLine.compactThinkingLevel`, `terminal.showProgress`, `tui.renderMermaid`, `tui.titleState`, `display.smoothStreaming`, `display.showTokenUsage`), stages every key/value through `omp config set` in a temporary root, validates the staged result against the curated source via `omp config list --json`, backs up the existing destination with a copy (not move) so a failed final install leaves the live destination intact, then atomically moves the staged config into place. If `omp` is absent from `PATH` during `--apply`, bootstrap prints `FOLLOW_UP OMP: install Oh My Pi, then rerun bootstrap.` and returns success without writing or backing up. Without `--apply`, prints the planned merge and backup path and makes no change.
   - *check:* validates the source against the same allowlist; a symlink or directory at the destination is `UNSAFE`. An absent destination (tool not yet installed) is `OK` — managed state, not a failure. A regular-file destination is `OK`. Source allowlist validation is also exercised by `scripts/tests/test_check.sh` as a standalone privacy check over the curated files.
 
+
 ## Mappings
 
-| ID | Source (in `~/utils`) | Destination (in `$HOME`) | Mode | Profile |
-| --- | --- | --- | --- | --- |
-| `zshrc` | `.zshrc` | `.zshrc` | symlink | base |
-| `zshrc-work` | `.zshrc.work` | `.zshrc.work` | symlink | work |
-| `bashrc` | `.bashrc` | `.bashrc` | symlink | base |
-| `bashrc0-linux` | `4-archives/.bashrc0` | `.bashrc0` | symlink | base@linux |
-| `bashrc0-macos` | `4-archives/.bashrc0.mac` | `.bashrc0` | symlink | base@macos |
-| `gitconfig` | `.gitconfig` | `.gitconfig` | manual-review | base |
-| `gitconfig-local` | — | `.gitconfig.local` | local | base |
-| `tmux` | `.tmux.conf` | `.tmux.conf` | symlink | base |
-| `ghostty-macos` | `ghostty.config` | `Library/Application Support/com.mitchellh.ghostty/config` | symlink | base@macos |
-| `ghostty-linux` | `ghostty.config` | `.config/ghostty/config` | symlink | base@linux |
-| `nvim-custom` | `nvim-custom/lua/custom` | `.config/nvim/lua/custom` | symlink | base |
-| `vimrc` | `.vimrc` | `.vimrc` | symlink | base |
-| `kubectl-aliases` | `.kubectlAliases` | `.kubectlAliases` | symlink | work |
-| `gh-config` | `.config/gh/config.yml` | `.config/gh/config.yml` | symlink | work |
-| `herdr-title-watch` | `.local/bin/herdr-title-watch` | `.local/bin/herdr-title-watch` | symlink | work |
-| `hammerspoon` | `.hammerspoon` | `.hammerspoon` | symlink | base@macos |
-| `vscode-settings-macos` | `ide/vscode/settings.json` | `Library/Application Support/Code/User/settings.json` | symlink | base@macos |
-| `vscode-settings-linux` | `ide/vscode/settings.json` | `.config/Code/User/settings.json` | symlink | base@linux |
-| `cursor-settings-macos` | `ide/cursor/settings.json` | `Library/Application Support/Cursor/User/settings.json` | symlink | base@macos |
-| `cursor-settings-linux` | `ide/cursor/settings.json` | `.config/Cursor/User/settings.json` | symlink | base@linux |
-| `cursor-keybindings-macos` | `ide/cursor/keybindings.json` | `Library/Application Support/Cursor/User/keybindings.json` | symlink | base@macos |
-| `cursor-keybindings-linux` | `ide/cursor/keybindings.json` | `.config/Cursor/User/keybindings.json` | symlink | base@linux |
-| `claude-preferences` | `ai/claude/settings.json` | `.claude/settings.json` | json-merge | base |
-| `omp-preferences` | `ai/omp/preferences.json` | `.omp/agent/config.yml` | omp-merge | base |
+| ID | Source (in `~/utils`) | Destination (in `$HOME`) | Mode | Profile | Environment profiles |
+| --- | --- | --- | --- | --- | --- |
+| `zshrc` | `.zshrc` | `.zshrc` | symlink | base | personal\|server\|work |
+| `zshrc-work` | `.zshrc.work` | `.zshrc.work` | symlink | work | work |
+| `bashrc` | `.bashrc` | `.bashrc` | symlink | base | personal\|server\|work |
+| `bashrc0-linux` | `4-archives/.bashrc0` | `.bashrc0` | symlink | base@linux | personal\|server\|work |
+| `bashrc0-macos` | `4-archives/.bashrc0.mac` | `.bashrc0` | symlink | base@macos | personal\|server\|work |
+| `gitconfig` | `.gitconfig` | `.gitconfig` | manual-review | base | personal\|server\|work |
+| `gitconfig-local` | — | `.gitconfig.local` | local | base | personal\|server\|work |
+| `tmux` | `.tmux.conf` | `.tmux.conf` | symlink | base | personal\|server\|work |
+| `ghostty-macos` | `ghostty.config` | `Library/Application Support/com.mitchellh.ghostty/config` | symlink | base@macos | personal\|work |
+| `ghostty-linux` | `ghostty.config` | `.config/ghostty/config` | symlink | base@linux | personal\|work |
+| `nvim-custom` | `nvim-custom/lua/custom` | `.config/nvim/lua/custom` | symlink | base | personal\|server\|work |
+| `vimrc` | `.vimrc` | `.vimrc` | symlink | base | personal\|server\|work |
+| `kubectl-aliases` | `.kubectlAliases` | `.kubectlAliases` | symlink | work | work |
+| `gh-config` | `.config/gh/config.yml` | `.config/gh/config.yml` | symlink | work | work |
+| `herdr-title-watch` | `.local/bin/herdr-title-watch` | `.local/bin/herdr-title-watch` | symlink | work | work |
+| `hammerspoon` | `.hammerspoon` | `.hammerspoon` | symlink | base@macos | personal\|work |
+| `vscode-settings-macos` | `ide/vscode/settings.json` | `Library/Application Support/Code/User/settings.json` | symlink | base@macos | personal\|work |
+| `vscode-settings-linux` | `ide/vscode/settings.json` | `.config/Code/User/settings.json` | symlink | base@linux | personal\|work |
+| `cursor-settings-macos` | `ide/cursor/settings.json` | `Library/Application Support/Cursor/User/settings.json` | symlink | base@macos | personal\|work |
+| `cursor-settings-linux` | `ide/cursor/settings.json` | `.config/Cursor/User/settings.json` | symlink | base@linux | personal\|work |
+| `cursor-keybindings-macos` | `ide/cursor/keybindings.json` | `Library/Application Support/Cursor/User/keybindings.json` | symlink | base@macos | personal\|work |
+| `cursor-keybindings-linux` | `ide/cursor/keybindings.json` | `.config/Cursor/User/keybindings.json` | symlink | base@linux | personal\|work |
+| `claude-preferences` | `ai/claude/settings.json` | `.claude/settings.json` | json-merge | base | personal\|work |
+| `omp-preferences` | `ai/omp/preferences.json` | `.omp/agent/config.yml` | omp-merge | base | personal\|work |
 
 The legacy Bash startup sources are stored under `4-archives/` because they are superseded runtime material; the root `~/.bashrc0` and `~/.bashrc0.mac` paths remain compatibility symlinks so existing shell startup behavior is unchanged. Bootstrap maps the platform-specific archived source to the active `~/.bashrc0` destination.
 
 The VS Code and Cursor extension manifests under `ide/{vscode,cursor}/extensions.txt` are installed by `bootstrap.sh` when the corresponding CLI is available; otherwise bootstrap reports a follow-up.
 
 IntelliJ uses a version-aware curated restore. `bootstrap.sh` selects the newest installed `IntelliJIdea*` or `IdeaIC*` options directory and copies only the tracked editor, UI, and terminal option files, backing up replaced files under `.workstation-setup-backups/`. Caches, workspace state, credentials, keymaps, and machine-specific plugin state remain untracked.
-The `kubectl-aliases` mapping is scoped to the `work` profile. It links the alias file only; it never links `~/.kube/config` or any cluster credential.
-`.zshrc.work` contains work-only shell state: AWS profile selection, Kubernetes aliases, DoorDash ETL variables, Devbox/Pedregal helpers, and Herdr workspace hooks. The main `.zshrc` sources it only when the work-profile symlink exists; it contains no credentials or Kubernetes configuration.
+The `kubectl-aliases` mapping is scoped to the `work` package profile and `work` environment profile. It links the alias file only; it never links `~/.kube/config` or any cluster credential.
+`.zshrc.work` contains work-only shell state: AWS profile selection, Kubernetes aliases, DoorDash ETL variables, Devbox/Pedregal helpers, and Herdr workspace hooks. The main `.zshrc` sources it only when `WORKSTATION_PROFILE` is unset or `work`; it contains no credentials or Kubernetes configuration. The archived Bash sources apply the same guard to work aliases and completions.
 `herdr-title-watch` is the portable work-profile helper launched by `.zshrc.work`; its runtime Herdr sockets and session state remain under `~/.config/herdr` and are not tracked.
 
 `gh-config` contains only GitHub CLI preferences and aliases. The authentication file `~/.config/gh/hosts.yml` is intentionally excluded.
@@ -106,6 +126,7 @@ The curated agent preference sources are real JSON files in the public `~/utils`
 | Destination | `.claude/settings.json` |
 | Mode | `json-merge` |
 | Profile | `base` |
+| Environment profiles | `personal\|work` |
 
 The source contains exactly six keys: `model`, `autoCompactEnabled`, `autoCompactWindow`, `tui`, `voice` (with `enabled`/`mode` sub-keys), and `voiceEnabled`. Bootstrap merges these into the destination JSON, preserving unknown local keys (for example, `permissions`, `customLocalKey`, or plugin/marketplace configuration a user added). Curated keys overwrite existing values; unknown keys are kept. The merge is atomic — a staged file is written and moved into place only after the backup succeeds.
 
@@ -119,6 +140,7 @@ If `claude` is not on `PATH` during `--apply`, bootstrap prints `FOLLOW_UP Claud
 | Destination | `.omp/agent/config.yml` |
 | Mode | `omp-merge` |
 | Profile | `base` |
+| Environment profiles | `personal\|work` |
 
 The source contains exactly 14 dotted keys: `defaultThinkingLevel`, `theme.dark`, `theme.light`, `symbolPreset`, `colorBlindMode`, `statusLine.preset`, `statusLine.separator`, `statusLine.sessionAccent`, `statusLine.compactThinkingLevel`, `terminal.showProgress`, `tui.renderMermaid`, `tui.titleState`, `display.smoothStreaming`, `display.showTokenUsage`. Bootstrap stages every key/value through `omp config set` against a temporary `PI_CODING_AGENT_DIR` (never the live `~/.omp/agent`), validates the staged result against the curated source via `omp config list --json`, backs up the existing destination with a copy (not move) so a failed final install leaves the live destination intact, then atomically moves the staged config into place. Unknown local keys in the existing config are preserved through the staging copy.
 

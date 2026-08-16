@@ -13,7 +13,7 @@ This package is the **setup control plane**: it owns setup intent, profile docum
 The kit manages **intent and orchestration**, not raw credentials:
 
 - **Tool coverage catalog** — [`references/tool-catalog.tsv`](references/tool-catalog.tsv) guarantees first-class coverage of GUI applications, IDEs, terminal/session utilities, AI clients, window utilities, developer CLI, package managers, runtimes, and mobile tooling. A tool stays in the catalog even when a detector later reports it as not installed. Column grammar: `command_candidates` is a colon-separated exact-token list; `profiles` is a pipe-separated direct-membership list using bare profile names (`base`, `work`, `mobile`) and platform-suffixed tokens (`base@macos`, `mobile@macos`) where a tool is platform-specific. See [Catalog grammar](#catalog-grammar).
-- **Configuration mappings** — [`references/config-sources.tsv`](references/config-sources.tsv) and [`references/config-sources.md`](references/config-sources.md) document which dotfiles come from `~/utils`, where they link in `$HOME`, and which profile owns each mapping.
+- **Configuration mappings** — [`references/config-sources.tsv`](references/config-sources.tsv) and [`references/config-sources.md`](references/config-sources.md) document which dotfiles come from `~/utils`, where they link in `$HOME`, and which package/profile and environment profile own each mapping.
 - **Profiles** — curated desired toolsets (see [Choose a profile](#choose-a-profile) below).
 - **Manifests** — desired package sets per platform in `manifests/common.txt`, `manifests/macos/Brewfile`, `manifests/linux/apt-packages.txt`, and `manifests/runtimes.txt`. Each macOS Brewfile entry carries a `# profile:<token>` selector used to generate the profile-filtered apply file.
 - **Inventory** — generated installed-state and recent-usage reports in `$HOME/.workstation-setup/inventory/` by default (override with `--output-dir`); reports are never written inside `~/utils`.
@@ -32,6 +32,24 @@ Profiles are composed from common entries plus an OS-specific manifest. Discover
 - [**linux-debian**](profiles/linux-debian.md) — Debian/Ubuntu platform differences and prerequisites (`apt`/`dpkg`, desktop entries, no Xcode/iOS simulator).
 
 Each profile doc lists its included catalog IDs, platform prerequisites, manual authentication/licensing handoffs, and what it does not restore.
+## Choose a configuration environment
+
+`--profile` remains the package and manifest selector (`base`, `work`, or `mobile`). The optional `WORKSTATION_PROFILE` variable is an additional configuration-set filter with exactly three values: `personal`, `server`, or `work`.
+
+- **`personal`** — desktop and developer configuration declared for personal use, including GUI settings, Hammerspoon, and portable Claude Code/OMP preferences; excludes work-only mappings.
+- **`server`** — the shell/editor subset declared for server use. It excludes GUI mappings, Hammerspoon, AI-agent preferences, and work mappings; bootstrap also skips menu-bar, IntelliJ, and IDE-extension actions.
+- **`work`** — the personal-compatible mapping set plus work-only mappings such as `.kubectlAliases`, GitHub CLI preferences, and the Herdr helper. Authentication and cluster state remain manual.
+
+The environment filter is applied after the existing package/profile and platform filters. Unset `WORKSTATION_PROFILE` preserves the prior behavior. Shell startup guards also prevent stale `.zshrc.work`, `.kubectlAliases`, and archived Bash work completions from leaking into `personal` or `server` shells.
+
+Examples:
+
+```bash
+WORKSTATION_PROFILE=personal bash scripts/bootstrap.sh --os macos --profile base --utils-path "$HOME/utils"
+WORKSTATION_PROFILE=server bash scripts/bootstrap.sh --os linux --profile base --utils-path "$HOME/utils"
+WORKSTATION_PROFILE=work bash scripts/check.sh --os macos --profile work --utils-path "$HOME/utils"
+```
+
 
 ## Migration
 
@@ -85,7 +103,7 @@ Candidate configuration content is checked against forbidden paths and common cr
 
 `~/utils` is the source of truth. See [`references/config-sources.md`](references/config-sources.md) for the full mapping table, profile-selector grammar, modes, and sharing rules, and [`references/config-sources.tsv`](references/config-sources.tsv) for the machine-readable version.
 
-Current mappings: `.zshrc` plus its Oh My Zsh framework/plugins, `.zshrc.work` (work profile, sourced by `.zshrc`), `.bashrc`, platform-specific archived `.bashrc0`/`.bashrc0.mac` sources mapped to the active `~/.bashrc0` compatibility path, `.gitconfig` (manual-review), `~/.gitconfig.local` (local, untracked), `.tmux.conf`, Ghostty `ghostty.config` (separate `base@macos` and `base@linux` rows), the versioned kickstart.nvim patch plus `nvim-custom/lua/custom/` overlay, `.vimrc` plus Vundle/plugin bootstrap, `.kubectlAliases`, non-secret GitHub CLI `config.yml` preferences, the work-profile `.local/bin/herdr-title-watch` helper, `.hammerspoon/` (`base@macos`, macOS-only), VS Code settings, Cursor settings/keybindings, curated version-aware IntelliJ editor/UI/terminal options, curated `base@macos` AltTab and Maccy menu-bar preferences restored from `~/utils/macos/menu-bar/` via defaults-domain import, and curated Claude Code and OMP agent preferences (`ai/claude/settings.json` via `json-merge`, `ai/omp/preferences.json` via `omp-merge`) restored from `~/utils/ai/` with timestamped backups and merge/stage preservation. Agent preference sources contain only portable preference keys — no `~/.claude.json`, no Claude plugin/marketplace/session state, no OMP `.env`/MCP secrets/databases/sessions/logs/extensions/provider routing, and no credentials. Authentication for both Claude Code and OMP is a manual handoff.
+Current mappings: `.zshrc` plus its Oh My Zsh framework/plugins, `.zshrc.work` (environment profile `work`, sourced by `.zshrc` only when `WORKSTATION_PROFILE` is unset or `work`), `.bashrc`, platform-specific archived `.bashrc0`/`.bashrc0.mac` sources mapped to the active `~/.bashrc0` compatibility path, `.gitconfig` (manual-review), `~/.gitconfig.local` (local, untracked), `.tmux.conf`, Ghostty `ghostty.config` (separate `base@macos` and `base@linux` rows), the versioned kickstart.nvim patch plus `nvim-custom/lua/custom/` overlay, `.vimrc` plus Vundle/plugin bootstrap, `.kubectlAliases`, non-secret GitHub CLI `config.yml` preferences, the work-profile `.local/bin/herdr-title-watch` helper, `.hammerspoon/` (`base@macos`, macOS-only), VS Code settings, Cursor settings/keybindings, curated version-aware IntelliJ editor/UI/terminal options, curated `base@macos` AltTab and Maccy menu-bar preferences restored from `~/utils/macos/menu-bar/` via defaults-domain import, and curated Claude Code and OMP agent preferences (`ai/claude/settings.json` via `json-merge`, `ai/omp/preferences.json` via `omp-merge`) restored from `~/utils/ai/` with timestamped backups and merge/stage preservation. Agent preference sources contain only portable preference keys — no `~/.claude.json`, no Claude plugin/marketplace/session state, no OMP `.env`/MCP secrets/databases/sessions/logs/extensions/provider routing, and no credentials. Authentication for both Claude Code and OMP is a manual handoff.
 
 ## Catalog grammar
 
