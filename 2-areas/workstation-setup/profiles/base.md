@@ -26,6 +26,15 @@ Platform manifests in `manifests/macos/Brewfile` and `manifests/linux/apt-packag
 
 Base maps these dotfiles from `~/utils` into `$HOME` when their package/profile and selected environment profile both match (see [`references/config-sources.md`](../references/config-sources.md)):
 
+- `.zshrc`, `.bashrc`, `.tmux.conf`
+- `.gitconfig` — `manual-review` mode; bootstrap prints it for hand-linking after preflight, never auto-links (the tracked source must be identity-free and must not contain any credential helper, including URL-scoped sections).
+- `~/.gitconfig.local` — `local` mode; untracked, holds identity and credential helper, never sourced from `~/utils`.
+- Ghostty `ghostty.config` — separate `base@macos` and `base@linux` mapping rows.
+- Neovim via kickstart.nvim — bootstrap clones upstream kickstart into `~/.config/nvim/`, applies the versioned `~/utils/nvim-custom/kickstart.patch`, then symlinks `lua/custom/` from `~/utils/nvim-custom/`. Upstream and user-owned changes stay separate. See [`references/config-sources.md`](../references/config-sources.md).
+- `.hammerspoon/` — `base@macos`, macOS-only, in the `personal|work` environments.
+- Claude Code preferences — `json-merge` mode; `ai/claude/settings.json` is merged into `~/.claude/settings.json`, preserving unknown local keys. The source contains only six portable keys (`model`, `autoCompactEnabled`, `autoCompactWindow`, `tui`, `voice`, `voiceEnabled`) and belongs to the `personal|work` environments. If `claude` is absent during apply, bootstrap prints a follow-up and does not write. See [`references/config-sources.md`](../references/config-sources.md).
+- OMP preferences — `omp-merge` mode; `ai/omp/preferences.json` is staged through `omp config set` into `~/.omp/agent/config.yml`, preserving unknown local keys. The source contains only 14 portable dotted keys and belongs to the `personal|work` environments. If `omp` is absent during apply, bootstrap prints a follow-up and does not write. See [`references/config-sources.md`](../references/config-sources.md).
+
 ## Configuration environments
 
 The `base` value passed to `--profile` selects packages and package-profile mappings; it does not mean that the machine is a personal desktop. Use the optional `WORKSTATION_PROFILE` selector for the configuration set:
@@ -35,16 +44,6 @@ The `base` value passed to `--profile` selects packages and package-profile mapp
 - `WORKSTATION_PROFILE=work` enables mappings declared for both `personal` and `work`, including work aliases, GitHub CLI preferences, and the Herdr helper. Authentication remains manual.
 
 Unset `WORKSTATION_PROFILE` preserves the legacy behavior. Platform constraints such as `base@macos` and `base@linux` remain enforced for every environment.
-
-
-- `.zshrc`, `.bashrc`, `.tmux.conf`
-- `.gitconfig` — `manual-review` mode; bootstrap prints it for hand-linking after preflight, never auto-links (the tracked source must be identity-free and must not contain any credential helper, including URL-scoped sections).
-- `~/.gitconfig.local` — `local` mode; untracked, holds identity and credential helper, never sourced from `~/utils`.
-- Ghostty `ghostty.config` — separate `base@macos` and `base@linux` mapping rows.
-- Neovim via kickstart.nvim — bootstrap clones upstream kickstart into `~/.config/nvim/`, applies the versioned `~/utils/nvim-custom/kickstart.patch`, then symlinks `lua/custom/` from `~/utils/nvim-custom/`. Upstream and user-owned changes stay separate. See [`references/config-sources.md`](../references/config-sources.md).
-- `.hammerspoon/` — `base@macos`, macOS-only, in the `personal|work` environments.
-- Claude Code preferences — `json-merge` mode; `ai/claude/settings.json` is merged into `~/.claude/settings.json`, preserving unknown local keys. The source contains only six portable keys (`model`, `autoCompactEnabled`, `autoCompactWindow`, `tui`, `voice`, `voiceEnabled`) and belongs to the `personal|work` environments. If `claude` is absent during apply, bootstrap prints a follow-up and does not write. See [`references/config-sources.md`](../references/config-sources.md).
-- OMP preferences — `omp-merge` mode; `ai/omp/preferences.json` is staged through `omp config set` into `~/.omp/agent/config.yml`, preserving unknown local keys. The source contains only 14 portable dotted keys and belongs to the `personal|work` environments. If `omp` is absent during apply, bootstrap prints a follow-up and does not write. See [`references/config-sources.md`](../references/config-sources.md).
 
 ## Manual authentication and licensing handoffs
 

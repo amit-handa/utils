@@ -20,9 +20,12 @@ GitHub CLI (`gh`) is named in this profile's intent; a future manifest entry wil
 
 ## Configuration sources
 
-The work package profile adds one mapping on top of base (see [`references/config-sources.md`](../references/config-sources.md)). When `WORKSTATION_PROFILE=work` is set, mappings declared for both `personal` and `work` are selected, so shared shell/editor mappings and work-only mappings are available together:
+The work package profile adds the work mappings on top of base (see [`references/config-sources.md`](../references/config-sources.md)). When `WORKSTATION_PROFILE=work` is set, mappings declared for both `personal` and `work` are selected, so shared shell/editor mappings and work-only mappings are available together:
 
-- `.kubectlAliases` → `$HOME/.kubectlAliases` (symlink, `work` environment only)
+- `.zshrc.work` → `$HOME/.zshrc.work` (symlink, `work` package profile and environment)
+- `.kubectlAliases` → `$HOME/.kubectlAliases` (symlink, `work` package profile and environment)
+- `.config/gh/config.yml` → `$HOME/.config/gh/config.yml` (symlink, `work` package profile and environment)
+- `.local/bin/herdr-title-watch` → `$HOME/.local/bin/herdr-title-watch` (symlink, `work` package profile and environment)
 
 It deliberately does **not** map `~/.kube/config`. Cluster credentials and contexts are a manual handoff. Unset `WORKSTATION_PROFILE` preserves the legacy mapping behavior.
 
