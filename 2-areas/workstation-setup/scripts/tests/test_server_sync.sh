@@ -72,6 +72,21 @@ assert_contains "$INVENTORY" 'OK compose immich-app running'
 assert_contains "$INVENTORY" 'OK compose ha2 running'
 assert_contains "$INVENTORY" 'OK compose mosquitto-docker running'
 assert_contains "$INVENTORY" 'UNEXPECTED compose project unexpected-app'
+cat >"$BIN_DIR/docker" <<'SH'
+#!/bin/sh
+case "$*" in
+  *'compose ls --all --format json'*)
+    printf '%s\n' '[{"Name":"immich-app","Status":"running(4)"},{"Name":"unexpected-app","Status":"running(1)"}]'
+    ;;
+  *'compose config --quiet'*) exit 0 ;;
+  *) exit 1 ;;
+esac
+SH
+chmod +x "$BIN_DIR/docker"
+MISSING_INVENTORY=$(WORKSTATION_PROFILE=server HOME="$HOME_DIR" PATH="$BIN_DIR:$PATH" \
+  bash "$SYNC" --os linux --inventory 2>&1)
+assert_contains "$MISSING_INVENTORY" 'INACTIVE compose ha2 missing'
+assert_contains "$MISSING_INVENTORY" 'INACTIVE compose mosquitto-docker missing'
 
 APACHE_PLAN=$(WORKSTATION_PROFILE=server HOME="$HOME_DIR" PATH="$BIN_DIR:$PATH" \
   bash "$SYNC" --os linux --service apache2 --vars-file "$VARS_FILE" 2>&1)

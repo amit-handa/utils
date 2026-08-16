@@ -427,6 +427,7 @@ except Exception:
 if not isinstance(projects, list):
     print('UNAVAILABLE compose inventory')
     raise SystemExit(0)
+seen = set()
 for project in projects:
     if not isinstance(project, dict):
         continue
@@ -436,11 +437,14 @@ for project in projects:
         continue
     if not isinstance(status, str):
         status = ''
+    seen.add(name)
     state = 'running' if status.startswith('running') else 'inactive'
     if name in known:
         print(('OK' if state == 'running' else 'INACTIVE') + f' compose {name} {state}')
     else:
         print(f'UNEXPECTED compose project {name}')
+for name in sorted(known - seen):
+    print(f'INACTIVE compose {name} missing')
 PY
 }
 
