@@ -37,7 +37,7 @@ A machine-role selector must not replace the existing package profile model or c
 
 `--profile` remains the package/profile selector. It is still required by both scripts and continues to control package manifests and the existing profile inheritance rules.
 
-`WORKSTATION_PROFILE` is an optional configuration-set selector. When unset, mapping selection uses the existing `profile` column exactly as before. When set, mapping selection uses the new `environment_profiles` column instead of the existing mapping-profile filter. This lets an explicit machine role select its configuration set without changing package installation behavior.
+`WORKSTATION_PROFILE` is an optional configuration-set selector. The existing `profile` column is always enforced first, including its `@macos`/`@linux` platform constraint and package-profile inheritance. When the environment variable is unset, that existing filter is the complete behavior. When it is set, the selected value is an additional membership filter from `environment_profiles`; it never bypasses OS or package-profile applicability. This lets an explicit machine role select its configuration set without changing package installation behavior.
 
 Examples:
 
@@ -82,8 +82,8 @@ Both scripts add the same validation and filtering primitives:
 
 1. Read and validate `WORKSTATION_PROFILE` before preflight or filesystem mutation.
 2. Parse the six-column mapping row and validate the environment-profile field.
-3. If the environment variable is empty, apply the existing `ws_profile_matches`/profile-column behavior.
-4. If it is set, require the selected environment profile in the row's `environment_profiles` field and skip rows that do not contain it.
+3. Always apply `ws_profile_matches` to the existing `profile` column first; this preserves package-profile inheritance and platform constraints such as `base@macos` and `base@linux`.
+4. If the environment variable is set, additionally require the selected environment profile in the row's `environment_profiles` field and skip rows that do not contain it. If it is empty, no additional role filter applies.
 5. Use the same decision in bootstrap preflight, bootstrap application, and read-only check output.
 
 No mapping is applied or reported as compliant unless it passes both path/mode safety validation and the selected configuration-set filter.
