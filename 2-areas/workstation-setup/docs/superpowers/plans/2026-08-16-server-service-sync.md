@@ -552,11 +552,12 @@ PLAN SERVICE <id> policy=<policy>
 PLAN SOURCE <template-relative-path>
 PLAN DESTINATION <safe-label>
 PLAN VALIDATE <id>
+PLAN REQUIRED_VAR <key>
 MANUAL_REVIEW <id> no portable artifact is applied
 SKIP <id> inventory-only policy
 ```
 
-With no vars file, dry-run prints the selected service plan and required variable names without rendering. With `--apply`, missing vars always fail before staging or backup.
+With no vars file, dry-run prints the selected service plan and one `PLAN REQUIRED_VAR <key>` record for each required variable without rendering. Apache requires `APACHE_SITE_PATH`, `APACHE_SERVER_NAME`, and `APACHE_DOCUMENT_ROOT`; Compose templates require their destination key. With `--apply`, missing vars always fail before staging or backup.
 
 - [ ] **Step 7: Add inventory probes**
 

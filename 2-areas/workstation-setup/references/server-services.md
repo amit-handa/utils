@@ -70,7 +70,7 @@ WORKSTATION_PROFILE=server \
   bash scripts/server-sync.sh --os linux --service immich
 ```
 
-A plan prints the service policy, repository-relative source, safe destination label, and validation step. It does not render into a live destination, create a Compose `.env`, or modify a service data directory. With no `--service`, a dry-run lists all `template` and `manual-review` rows; `inventory-only` rows are skipped.
+A plan prints the service policy, repository-relative source, safe destination label, and validation step. With no vars file, each template plan also emits one `PLAN REQUIRED_VAR <key>` record per required variable; Apache lists its destination, server name, and document root keys, while Compose lists its destination key. It does not render into a live destination, create a Compose `.env`, or modify a service data directory. With no `--service`, a dry-run lists all `template` and `manual-review` rows; `inventory-only` rows are skipped.
 
 Apply is intentionally narrower: it requires one selected `template` service, a local vars file, and an explicit `--apply`:
 
