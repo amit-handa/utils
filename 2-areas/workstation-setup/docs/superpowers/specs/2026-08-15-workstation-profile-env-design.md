@@ -92,7 +92,7 @@ Bootstrap's non-TSV actions use the same environment-role policy: `restore_menu_
 
 If `WORKSTATION_PROFILE=work` is combined with `--profile base`, the existing package-profile filter still excludes rows whose `profile` is `work`; callers selecting the work configuration set should use `--profile work` when they also need work-package mappings.
 
-The existing `.zshrc` work include is guarded independently of link state: with the environment unset it keeps current behavior, with `personal` or `server` it does not source `$HOME/.zshrc.work`, and with `work` it sources the file when present.
+The existing `.zshrc` work include and the work-specific tails of `4-archives/.bashrc0` and `4-archives/.bashrc0.mac` are guarded independently of link state: with the environment unset they keep current behavior, with `personal` or `server` they do not load work aliases/completions, and with `work` they load the files when present.
 
 No mapping is applied or reported as compliant unless it passes both path/mode safety validation and the selected configuration-set filter.
 
@@ -124,7 +124,7 @@ Add test-first fixture coverage:
 - `WORKSTATION_PROFILE=work` includes personal and work mappings.
 - Invalid values fail before any destination is created or changed.
 - Both bootstrap dry-run/apply and check output use the same filter.
-- Shell startup does not load a stale `.zshrc.work` link for `personal` or `server`, while unset and `work` preserve expected loading.
+- Shell startup does not load stale `.zshrc.work` or archived Bash work aliases/completions for `personal` or `server`, while unset and `work` preserve expected loading.
 - Snapshot inventory still parses the sixth mapping field without changing its existing package-profile output.
 - Server bootstrap skips menu-bar, IntelliJ, and IDE-extension actions before probing or mutating them.
 - Metadata validation rejects malformed or missing sixth-column values.

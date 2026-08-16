@@ -128,9 +128,48 @@ run_profile server
 [ ! -e "$FIXTURE/marker" ] || exit 1
 run_profile work
 [ -f "$FIXTURE/marker" ] || exit 1
+
+BIN_DIR="$FIXTURE/bin"
+mkdir -p "$BIN_DIR" "$HOME_DIR/.ssh"
+printf '%s\n' 'SSH_AGENT_PID=123' >"$HOME_DIR/.ssh/environment"
+cat >"$BIN_DIR/ps" <<'SH'
+#!/bin/sh
+printf '%s\n' 'root 123 1 0 00:00 ? 00:00:00 ssh-agent'
+SH
+chmod +x "$BIN_DIR/ps"
+for command in kubectl kops helm minikube; do
+  cat >"$BIN_DIR/$command" <<'SH'
+#!/bin/sh
+printf '%s\n' work-bash-loaded >>"$PROFILE_MARKER"
+printf '%s\n' ':'
+SH
+  chmod +x "$BIN_DIR/$command"
+done
+printf '%s\n' 'printf "%s\n" work-bash-loaded >>"$PROFILE_MARKER"' >"$HOME_DIR/.kubectlAliases"
+
+run_bash_profile() {
+  local source_file=$1 profile=$2
+  rm -f "$FIXTURE/marker"
+  HOME="$HOME_DIR" PATH="$BIN_DIR:/usr/bin:/bin" PS1=fixture \
+    UTILS_DIR="$UTILS_DIR" SOURCE_FILE="$source_file" \
+    PROFILE_MARKER="$FIXTURE/marker" WORKSTATION_PROFILE="$profile" \
+    bash --noprofile --norc -c 'source "$UTILS_DIR/4-archives/$SOURCE_FILE"' \
+    >/dev/null 2>&1
+  if [ "$profile" = personal ] || [ "$profile" = server ]; then
+    [ ! -e "$FIXTURE/marker" ] || exit 1
+  else
+    [ -f "$FIXTURE/marker" ] || exit 1
+  fi
+}
+
+for source_file in .bashrc0 .bashrc0.mac; do
+  run_bash_profile "$source_file" personal
+  run_bash_profile "$source_file" server
+  run_bash_profile "$source_file" work
+done
 ```
 
-The fixture uses a stale `.zshrc.work` file and proves that the selector, not link existence, controls runtime loading. In `test_snapshot.sh`, after `MAC_CURRENT` is loaded, assert that the Configuration sources section still reports the existing package profile value and does not leak the new role-membership field:
+The fixture uses stale `.zshrc.work`, `.kubectlAliases`, and archived Bash startup sources and proves that the selector, not link existence, controls runtime loading. In `test_snapshot.sh`, after `MAC_CURRENT` is loaded, assert that the Configuration sources section still reports the existing package profile value and does not leak the new role-membership field:
 
 ```bash
 CONFIG_SECTION=$(section_content "$MAC_CURRENT" 'Configuration sources')
@@ -255,6 +294,8 @@ Expected: exit 0 with no output.
 - Modify: `2-areas/workstation-setup/scripts/check.sh`
 - Modify: `2-areas/workstation-setup/scripts/snapshot.sh`
 - Modify: `.zshrc`
+- Modify: `4-archives/.bashrc0`
+- Modify: `4-archives/.bashrc0.mac`
 
 - [ ] **Step 1: Add the sixth metadata column**
 
@@ -357,7 +398,15 @@ if [[ -r "$HOME/.zshrc.work" ]] &&
 fi
 ```
 
-This preserves unset behavior and prevents a stale work link from leaking into personal/server shells.
+In both `4-archives/.bashrc0` and `4-archives/.bashrc0.mac`, wrap the existing kubectl/helm/minikube/kops completion and `~/.kubectlAliases` source block with the same Bash-compatible condition:
+
+```bash
+if [ -z "${WORKSTATION_PROFILE:-}" ] || [ "$WORKSTATION_PROFILE" = work ]; then
+  # existing completion sources and kubectl alias loading
+fi
+```
+
+This preserves unset behavior and prevents stale work links or archived Bash sources from leaking work configuration into personal/server shells.
 
 - [ ] **Step 4: Update check row parsing and filtering**
 
@@ -483,7 +532,7 @@ Expected: 5 Python tests pass, followed by `check fixture tests: PASS`, `bootstr
 
 - [ ] **Step 2: Verify platform filtering explicitly**
 
-Run the environment-profile fixture plus bootstrap with `WORKSTATION_PROFILE=server` on both `--os macos` and `--os linux`; confirm no `base@macos` mapping appears in the Linux output, no desktop mapping or non-TSV desktop action appears in either server output, and the stale `.zshrc.work` fixture is not loaded. Run check with `WORKSTATION_PROFILE=personal`, `server`, and `work` and confirm each output contains only its declared IDs.
+Run the environment-profile fixture plus bootstrap with `WORKSTATION_PROFILE=server` on both `--os macos` and `--os linux`; confirm no `base@macos` mapping appears in the Linux output, no desktop mapping or non-TSV desktop action appears in either server output, and stale `.zshrc.work`, `.kubectlAliases`, and archived Bash work completions are not loaded. Run check with `WORKSTATION_PROFILE=personal`, `server`, and `work` and confirm each output contains only its declared IDs.
 
 - [ ] **Step 3: Verify metadata and repository boundaries**
 
