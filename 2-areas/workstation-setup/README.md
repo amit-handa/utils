@@ -17,7 +17,7 @@ The kit manages **intent and orchestration**, not raw credentials:
 - **Profiles** — curated desired toolsets (see [Choose a profile](#choose-a-profile) below).
 - **Manifests** — desired package sets per platform in `manifests/common.txt`, `manifests/macos/Brewfile`, `manifests/linux/apt-packages.txt`, and `manifests/runtimes.txt`. Each macOS Brewfile entry carries a `# profile:<token>` selector used to generate the profile-filtered apply file.
 - **Inventory** — generated installed-state and recent-usage reports in `$HOME/.workstation-setup/inventory/` by default (override with `--output-dir`); reports are never written inside `~/utils`.
-- **Scripts** — `scripts/snapshot.sh` inventories observed state; `scripts/bootstrap.sh` installs the selected profile and applies safe configuration mappings. Shared helpers and focused fixtures live under `scripts/`.
+- **Scripts** — `scripts/snapshot.sh` inventories observed state; `scripts/bootstrap.sh` installs the selected profile and applies safe configuration mappings; `scripts/server-sync.sh` inventories and dry-runs explicit Linux server service configuration. Shared helpers and focused fixtures live under `scripts/`.
 
 What the kit does **not** manage: credentials, tokens, private keys, Keychain contents, Kubernetes contexts, cloud profiles, cookies, caches, logs, databases, raw shell history, or machine identifiers. See [Privacy boundary](#privacy-boundary).
 
@@ -41,6 +41,7 @@ Each profile doc lists its included catalog IDs, platform prerequisites, manual 
 - **`work`** — the personal-compatible mapping set plus work-only mappings such as `.kubectlAliases`, GitHub CLI preferences, and the Herdr helper. Authentication and cluster state remain manual.
 
 The environment filter is applied after the existing package/profile and platform filters. Unset `WORKSTATION_PROFILE` preserves the prior behavior. Shell startup guards also prevent stale `.zshrc.work`, `.kubectlAliases`, and archived Bash work completions from leaking into `personal` or `server` shells.
+Server service configuration synchronization is separate from home-file mappings. `WORKSTATION_PROFILE=server` gates [`references/server-services.md`](references/server-services.md) and the `scripts/server-sync.sh` command; service data, credentials, and runtime state remain local and manual.
 
 Examples:
 
@@ -144,6 +145,7 @@ Use these focused commands:
 - `scripts/snapshot.sh --os <macos|linux>` — generate normalized inventory and recent-usage reports under `$HOME/.workstation-setup/inventory/` by default; use `--output-dir` for another safe location (read-only; never modifies `~/utils` or credential locations).
 - `scripts/bootstrap.sh --os <macos|linux> --profile <base|work|mobile> [--utils-path PATH] [--apply]` — dry-run-first profile installer and configuration linker. `base` entries are inherited by `work` and `mobile`; vendor packages and authentication remain manual.
 - `bash scripts/tests/test_bootstrap.sh` — exercise dry-run invariants, profile filtering, package-manager arguments, backups, local-file permissions, fail-closed preflight, and redaction.
+- `WORKSTATION_PROFILE=server bash scripts/server-sync.sh --os linux --inventory` — read-only service inventory; it never starts, stops, reloads, or repairs services.
 
 ## Related notes
 

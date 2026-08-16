@@ -45,6 +45,16 @@ The `base` value passed to `--profile` selects packages and package-profile mapp
 
 Unset `WORKSTATION_PROFILE` preserves the legacy behavior. Platform constraints such as `base@macos` and `base@linux` remain enforced for every environment.
 
+## Server services
+
+Server service synchronization is documented in [`references/server-services.md`](../references/server-services.md) and is separate from these home-file mappings. Under `WORKSTATION_PROFILE=server`, the explicit Linux-only `scripts/server-sync.sh` command covers service configuration only:
+
+- **Template:** Apache2, Immich, Home Assistant, and Mosquitto.
+- **Inventory-only:** Syncthing.
+- **Manual-review:** MariaDB, Samba, x11vnc, Photoview, and vsftpd.
+
+Service data, credentials, identities, databases, media, logs, and runtime state remain local and require manual service-specific procedures. The command never restarts services or applies a service-local `.env`.
+
 ## Manual authentication and licensing handoffs
 
 The kit **never** installs credentials or authenticated state. Complete these manually after bootstrap:

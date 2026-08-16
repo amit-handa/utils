@@ -104,11 +104,11 @@ WORKSTATION_PROFILE=server \
 WORKSTATION_PROFILE=server \
   bash scripts/server-sync.sh --service immich
 WORKSTATION_PROFILE=server \
-  bash scripts/server-sync.sh --apply \
+  bash scripts/server-sync.sh --service immich --apply \
   --vars-file "$HOME/.config/workstation-setup/server.env"
 ```
 
-`--inventory` performs read-only probes against systemd, the user systemd manager, and Docker Compose. It reports known services, missing services, unexpected application workloads, Compose roots, and listening service classes. It does not collect raw configuration, environment values, container logs, or data paths beyond the declared inventory fields.
+`--inventory` performs read-only probes against systemd, the user systemd manager, and Docker Compose. It reports known services, inactive services, unexpected Compose projects, and known Compose projects missing from the inventory. It does not collect raw configuration, environment values, container logs, or data paths.
 
 For template services, the normal flow is:
 

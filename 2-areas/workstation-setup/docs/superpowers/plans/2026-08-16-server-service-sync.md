@@ -115,6 +115,21 @@ assert_contains "$INVENTORY" 'INACTIVE service photoview'
 assert_contains "$INVENTORY" 'INACTIVE service vsftpd'
 assert_contains "$INVENTORY" 'OK compose immich-app running'
 assert_contains "$INVENTORY" 'UNEXPECTED compose project unexpected-app'
+cat >"$BIN_DIR/docker" <<'SH'
+#!/bin/sh
+case "$*" in
+  *'compose ls --all --format json'*)
+    printf '%s\n' '[{"Name":"immich-app","Status":"running(4)"},{"Name":"unexpected-app","Status":"running(1)"}]'
+    ;;
+  *'compose config --quiet'*) exit 0 ;;
+  *) exit 1 ;;
+esac
+SH
+chmod +x "$BIN_DIR/docker"
+MISSING_INVENTORY=$(WORKSTATION_PROFILE=server HOME="$HOME_DIR" PATH="$BIN_DIR:$PATH" \
+  bash "$SYNC" --os linux --inventory 2>&1)
+assert_contains "$MISSING_INVENTORY" 'INACTIVE compose ha2 missing'
+assert_contains "$MISSING_INVENTORY" 'INACTIVE compose mosquitto-docker missing'
 
 APACHE_PLAN=$(WORKSTATION_PROFILE=server HOME="$HOME_DIR" PATH="$BIN_DIR:$PATH" \
   bash "$SYNC" --os linux --service apache2 --vars-file "$VARS_FILE" 2>&1)
@@ -549,7 +564,7 @@ Implement fixed probe functions:
 
 - `systemctl is-active --quiet apache2`, `mariadb`, `smbd`, `x11vnc`, `photoview`, and `vsftpd`.
 - `systemctl --user is-active --quiet syncthing`.
-- `docker compose ls --all --format json`, parsed with Python to report project names and statuses only. Compare known projects `immich-app`, `ha2`, and `mosquitto-docker`; report other projects as `UNEXPECTED` without failing.
+- `docker compose ls --all --format json`, parsed with Python to report project names and statuses only. Compare known projects `immich-app`, `ha2`, and `mosquitto-docker`; report other projects as `UNEXPECTED` and known projects absent from the output as `INACTIVE ... missing`, without failing.
 
 Inventory output must never print environment variables, container logs, raw Compose file paths, or Docker inspect output. Missing tools produce `UNAVAILABLE`; inactive known services produce `MISSING`/`INACTIVE`; probes never start or modify services.
 
@@ -597,7 +612,7 @@ git commit -m "feat(workstation): add safe server service sync" \
 
 - [ ] **Step 1: Write the service reference**
 
-Document the metadata columns, all eight service policies, the exact exclusions, local vars-file rules, dry-run/apply commands, backup location, no-restart behavior, and the distinction between service configuration and service data. Include this command block:
+Document the metadata columns, all ten service rows, the three policy types, the exact exclusions, local vars-file rules, dry-run/apply commands, backup location, no-restart behavior, and the distinction between service configuration and service data. Include this command block:
 
 ```bash
 WORKSTATION_PROFILE=server \
@@ -605,7 +620,7 @@ WORKSTATION_PROFILE=server \
 WORKSTATION_PROFILE=server \
   bash scripts/server-sync.sh --os linux --service immich
 WORKSTATION_PROFILE=server \
-  bash scripts/server-sync.sh --os linux --apply \
+  bash scripts/server-sync.sh --os linux --service immich --apply \
   --vars-file "$HOME/.config/workstation-setup/server.env"
 ```
 
