@@ -117,9 +117,15 @@ printf '%s\n' 'print -r -- loaded >"$PROFILE_MARKER"' >"$HOME_DIR/.zshrc.work"
 run_profile() {
   local profile=$1
   rm -f "$FIXTURE/marker"
-  HOME="$HOME_DIR" UTILS_DIR="$UTILS_DIR" PROFILE_MARKER="$FIXTURE/marker" \
-    WORKSTATION_PROFILE="$profile" zsh -d -f -c \
-    'source "$UTILS_DIR/.zshrc"' >/dev/null 2>&1
+  if [ "$profile" = unset ]; then
+    env -u WORKSTATION_PROFILE HOME="$HOME_DIR" UTILS_DIR="$UTILS_DIR" \
+      PROFILE_MARKER="$FIXTURE/marker" zsh -d -f -c \
+      'source "$UTILS_DIR/.zshrc"' >/dev/null 2>&1
+  else
+    HOME="$HOME_DIR" UTILS_DIR="$UTILS_DIR" PROFILE_MARKER="$FIXTURE/marker" \
+      WORKSTATION_PROFILE="$profile" zsh -d -f -c \
+      'source "$UTILS_DIR/.zshrc"' >/dev/null 2>&1
+  fi
 }
 
 run_profile personal
@@ -127,6 +133,8 @@ run_profile personal
 run_profile server
 [ ! -e "$FIXTURE/marker" ] || exit 1
 run_profile work
+[ -f "$FIXTURE/marker" ] || exit 1
+run_profile unset
 [ -f "$FIXTURE/marker" ] || exit 1
 
 BIN_DIR="$FIXTURE/bin"
@@ -150,11 +158,17 @@ printf '%s\n' 'printf "%s\n" work-bash-loaded >>"$PROFILE_MARKER"' >"$HOME_DIR/.
 run_bash_profile() {
   local source_file=$1 profile=$2
   rm -f "$FIXTURE/marker"
-  HOME="$HOME_DIR" PATH="$BIN_DIR:/usr/bin:/bin" PS1=fixture \
-    UTILS_DIR="$UTILS_DIR" SOURCE_FILE="$source_file" \
-    PROFILE_MARKER="$FIXTURE/marker" WORKSTATION_PROFILE="$profile" \
-    bash --noprofile --norc -c 'source "$UTILS_DIR/4-archives/$SOURCE_FILE"' \
-    >/dev/null 2>&1
+  if [ "$profile" = unset ]; then
+    env -u WORKSTATION_PROFILE HOME="$HOME_DIR" PATH="$BIN_DIR:/usr/bin:/bin" PS1=fixture \
+      UTILS_DIR="$UTILS_DIR" SOURCE_FILE="$source_file" PROFILE_MARKER="$FIXTURE/marker" \
+      bash --noprofile --norc -c 'source "$UTILS_DIR/4-archives/$SOURCE_FILE"' \
+      >/dev/null 2>&1
+  else
+    HOME="$HOME_DIR" PATH="$BIN_DIR:/usr/bin:/bin" PS1=fixture \
+      UTILS_DIR="$UTILS_DIR" SOURCE_FILE="$source_file" PROFILE_MARKER="$FIXTURE/marker" \
+      WORKSTATION_PROFILE="$profile" bash --noprofile --norc -c \
+      'source "$UTILS_DIR/4-archives/$SOURCE_FILE"' >/dev/null 2>&1
+  fi
   if [ "$profile" = personal ] || [ "$profile" = server ]; then
     [ ! -e "$FIXTURE/marker" ] || exit 1
   else
@@ -166,6 +180,7 @@ for source_file in .bashrc0 .bashrc0.mac; do
   run_bash_profile "$source_file" personal
   run_bash_profile "$source_file" server
   run_bash_profile "$source_file" work
+  run_bash_profile "$source_file" unset
 done
 ```
 
