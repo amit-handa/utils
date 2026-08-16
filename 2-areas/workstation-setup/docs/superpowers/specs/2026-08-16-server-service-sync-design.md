@@ -98,13 +98,13 @@ Dry-run is the default. Supported operations are:
 
 ```bash
 WORKSTATION_PROFILE=server \
-  bash scripts/server-sync.sh --inventory
+  bash scripts/server-sync.sh --os linux --inventory
 WORKSTATION_PROFILE=server \
-  bash scripts/server-sync.sh --service apache2
+  bash scripts/server-sync.sh --os linux --service apache2
 WORKSTATION_PROFILE=server \
-  bash scripts/server-sync.sh --service immich
+  bash scripts/server-sync.sh --os linux --service immich
 WORKSTATION_PROFILE=server \
-  bash scripts/server-sync.sh --service immich --apply \
+  bash scripts/server-sync.sh --os linux --service immich --apply \
   --vars-file "$HOME/.config/workstation-setup/server.env"
 ```
 
