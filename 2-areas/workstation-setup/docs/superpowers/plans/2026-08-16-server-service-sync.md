@@ -76,7 +76,7 @@ cat >"$BIN_DIR/docker" <<'SH'
 #!/bin/sh
 case "$*" in
   *'compose ls --all --format json'*)
-    printf '%s\n' '[{"Name":"immich-app","Status":"running(4)"},{"Name":"ha2","Status":"running(1)"},{"Name":"mosquitto-docker","Status":"running(1)"},{"Name":"unexpected-app","Status":"running(1)}]'
+    printf '%s\n' '[{"Name":"immich-app","Status":"running(4)"},{"Name":"ha2","Status":"running(1)"},{"Name":"mosquitto-docker","Status":"running(1)"},{"Name":"unexpected-app","Status":"running(1)"}]'
     ;;
   *'compose config --quiet'*) exit 0 ;;
   *) exit 1 ;;
