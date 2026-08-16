@@ -69,6 +69,8 @@ assert_contains "$INVENTORY" 'OK service syncthing active'
 assert_contains "$INVENTORY" 'INACTIVE service photoview'
 assert_contains "$INVENTORY" 'INACTIVE service vsftpd'
 assert_contains "$INVENTORY" 'OK compose immich-app running'
+assert_contains "$INVENTORY" 'OK compose ha2 running'
+assert_contains "$INVENTORY" 'OK compose mosquitto-docker running'
 assert_contains "$INVENTORY" 'UNEXPECTED compose project unexpected-app'
 
 APACHE_PLAN=$(WORKSTATION_PROFILE=server HOME="$HOME_DIR" PATH="$BIN_DIR:$PATH" \
@@ -137,3 +139,4 @@ for path in root.rglob('*'):
         raise SystemExit(f'host-specific content in {path}')
 print('template privacy: PASS')
 PY
+printf '%s\n' 'server sync fixture tests: PASS'
