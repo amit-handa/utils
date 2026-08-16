@@ -1,0 +1,11 @@
+id	manager	probe	artifact	destination_key	policy	excluded_classes
+apache2	systemd	systemctl:is-active:apache2	server/templates/apache/virtual-host.conf.tmpl	APACHE_SITE_PATH	template	certificates|private-keys|logs|hostnames|document-roots
+immich	docker-compose	docker:compose:immich-app	server/templates/compose/immich/compose.yaml	IMMICH_ROOT	template	env|uploads|media|postgresql|redis|model-cache
+homeassistant	docker-compose	docker:compose:ha2	server/templates/compose/homeassistant/compose.yaml	HOMEASSISTANT_ROOT	template	env|storage|databases|logs|backups|device-ids|automations|credentials
+mosquitto	docker-compose	docker:compose:mosquitto-docker	server/templates/compose/mosquitto/compose.yaml	MOSQUITTO_ROOT	template	password-files|data|logs|credentials|runtime-identity
+syncthing	systemd-user	systemctl:user:is-active:syncthing	-	-	inventory-only	config|keys|device-ids|folders|indexes|database
+mariadb	systemd	systemctl:is-active:mariadb	-	-	manual-review	data|users|grants|credentials|logs
+samba	systemd	systemctl:is-active:smbd	-	-	manual-review	account-database|acls|shares|credentials
+x11vnc	systemd	systemctl:is-active:x11vnc	-	-	manual-review	passwords|display-state|session-state|overrides
+photoview	systemd	systemctl:is-active:photoview	-	-	manual-review	compose|env|media|database|logs
+vsftpd	systemd	systemctl:is-active:vsftpd	-	-	manual-review	config|credentials|certificates|logs|user-data

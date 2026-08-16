@@ -1,0 +1,31 @@
+name: immich-app
+services:
+  immich-server:
+    image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
+    volumes:
+      - ${UPLOAD_LOCATION:?Set UPLOAD_LOCATION in the local .env}:/usr/src/app/upload
+      - ${PHOTOS_LOCATION:?Set PHOTOS_LOCATION in the local .env}:/mnt/media/pics
+      - /etc/localtime:/etc/localtime:ro
+    env_file: .env
+    ports:
+      - "2283:2283"
+    depends_on:
+      - redis
+      - database
+    restart: always
+  immich-machine-learning:
+    image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-release}
+    volumes:
+      - ./volumes/model-cache:/cache
+    env_file: .env
+    restart: always
+  redis:
+    image: redis:6.2-alpine
+    restart: always
+  database:
+    image: ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0
+    env_file: .env
+    volumes:
+      - ./volumes/pgdata:/var/lib/postgresql/data
+    shm_size: 128mb
+    restart: always

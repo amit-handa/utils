@@ -1,0 +1,6 @@
+default_config:
+logger:
+  default: info
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml

@@ -1,0 +1,13 @@
+<VirtualHost *:80>
+    ServerName __APACHE_SERVER_NAME__
+    DocumentRoot __APACHE_DOCUMENT_ROOT__
+
+    <Directory __APACHE_DOCUMENT_ROOT__>
+        Options Indexes FollowSymLinks
+        AllowOverride None
+        Require all granted
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/server-sync-error.log
+    CustomLog ${APACHE_LOG_DIR}/server-sync-access.log combined
+</VirtualHost>
