@@ -58,10 +58,11 @@ WORKSTATION_PROFILE=work bash scripts/check.sh --os macos --profile work --utils
    - **macOS:** install [Homebrew](https://brew.sh).
    - **Debian/Ubuntu:** `apt`/`dpkg` is preinstalled; ensure `git` and `bash`/`zsh` are available.
 2. **Clone the dotfiles source** — clone [`~/utils`](https://github.com/amit-handa/utils) to the target `~/utils` (or pass `--utils-path` to point elsewhere). This is the single source of truth for dotfiles.
-3. **Pick a profile** — see [Choose a profile](#choose-a-profile).
-4. **Dry-run the bootstrap** — run `scripts/bootstrap.sh --os <macos|linux> --profile <base|work|mobile> [--utils-path PATH]` without `--apply`. Dry-run is the default: it prints package, link, backup, local-file, and manual follow-up actions without calling a package manager or modifying either tree.
-5. **Apply** — re-run with `--apply`. It preflights every selected mapping before any mutation, installs only the composed base-plus-selected profile, backs up an existing destination under `~/.workstation-setup-backups/<UTC timestamp>/`, and creates only declared links or missing local-only files. It never applies the tracked `.gitconfig` or installs credentials.
-6. **Manual handoffs** — complete the authentication/licensing steps listed in your profile doc. The kit never stores the resulting secrets.
+3. **Check the Neovim runtime on Linux** — the current Kickstart baseline and custom plugin overlay require Neovim `0.12` or newer. If the `apt` candidate is older, follow [`How to Upgrade Neovim`](docs/how-to/neovim-upgrade.md) before applying the profile.
+4. **Pick a profile** — see [Choose a profile](#choose-a-profile).
+5. **Dry-run the bootstrap** — run `scripts/bootstrap.sh --os <macos|linux> --profile <base|work|mobile> [--utils-path PATH]` without `--apply`. Dry-run is the default: it prints package, link, backup, local-file, and manual follow-up actions without calling a package manager or modifying either tree.
+6. **Apply** — re-run with `--apply`. It preflights every selected mapping before any mutation, installs only the composed base-plus-selected profile, backs up an existing destination under `~/.workstation-setup-backups/<UTC timestamp>/`, and creates only declared links or missing local-only files. It never applies the tracked `.gitconfig` or installs credentials.
+7. **Manual handoffs** — complete the authentication/licensing steps listed in your profile doc. The kit never stores the resulting secrets.
 
 ## Update workflow
 
@@ -144,6 +145,7 @@ Use these focused commands:
 
 - `scripts/snapshot.sh --os <macos|linux>` — generate normalized inventory and recent-usage reports under `$HOME/.workstation-setup/inventory/` by default; use `--output-dir` for another safe location (read-only; never modifies `~/utils` or credential locations).
 - `scripts/bootstrap.sh --os <macos|linux> --profile <base|work|mobile> [--utils-path PATH] [--apply]` — dry-run-first profile installer and configuration linker. `base` entries are inherited by `work` and `mobile`; vendor packages and authentication remain manual.
+- [`docs/how-to/neovim-upgrade.md`](docs/how-to/neovim-upgrade.md) — upgrade Neovim when the Linux `apt` candidate is below `0.12`, including the user-local official tarball fallback.
 - `bash scripts/tests/test_bootstrap.sh` — exercise dry-run invariants, profile filtering, package-manager arguments, backups, local-file permissions, fail-closed preflight, and redaction.
 - `WORKSTATION_PROFILE=server bash scripts/server-sync.sh --os linux --inventory` — read-only service inventory; it never starts, stops, reloads, or repairs services.
 

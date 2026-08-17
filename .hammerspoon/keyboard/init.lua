@@ -50,21 +50,21 @@ local layouts = {
       if (#hs.screen.allScreens() > 1) then
         if( space == 1 ) then
           win:moveToScreen(hs.screen.get(second_monitor))
-		  hs.window.right(win)
+		  hs.window.right(win, false)
         else  -- second space
           win:moveToScreen(hs.screen.get(second_monitor))
           if( index%2 == 0 ) then
-            hs.window.left(win)
+            hs.window.moveHorizontal(win, false)
           else
-            hs.window.right(win)
+            hs.window.right(win, false)
           end
         end
       else
         if( space == 2 ) then
           if( index%2 == 0 ) then
-            hs.window.left(win)
+            hs.window.moveHorizontal(win, false)
           else
-            hs.window.right(win)
+            hs.window.right(win, false)
           end
 		else
 			win:maximize()
@@ -77,7 +77,7 @@ local layouts = {
     func = function(index, win)
       if (#hs.screen.allScreens() > 1) then
         win:moveToScreen(hs.screen.get(second_monitor))
-        hs.window.left(win)
+        hs.window.moveHorizontal(win, false)
       else
         win:maximize()
       end
@@ -189,14 +189,50 @@ newWindowWatcher = {
 }
 
 function config()
-  hs.hotkey.bind(ctrl_cmd, "l", function()
-    local win = hs.window.focusedWindow()
-    hs.window.right(win)
-  end)
 
   hs.hotkey.bind(ctrl_cmd, "h", function()
     local win = hs.window.focusedWindow()
-    hs.window.left(win)
+    hs.window.moveHorizontal(win, true)
+  end)
+
+  hs.hotkey.bind(ctrl_cmd, "y", function()
+    local win = hs.window.focusedWindow()
+    hs.window.changeWidth(win, true)
+  end)
+
+  hs.hotkey.bind(ctrl_cmd, "l", function()
+    local win = hs.window.focusedWindow()
+    hs.window.moveHorizontal(win, false)
+  end)
+
+  hs.hotkey.bind(ctrl_cmd, "o", function()
+    local win = hs.window.focusedWindow()
+    hs.window.changeWidth(win, false)
+  end)
+
+  hs.hotkey.bind(ctrl_cmd, "j", function()
+    local win = hs.window.focusedWindow()
+    hs.window.moveVertical(win, false)
+  end)
+
+  hs.hotkey.bind(ctrl_cmd, "u", function()
+    local win = hs.window.focusedWindow()
+    hs.window.changeHeight(win, true)
+  end)
+
+  hs.hotkey.bind(ctrl_cmd, "k", function()
+    local win = hs.window.focusedWindow()
+    hs.window.moveVertical(win, true)
+  end)
+
+  hs.hotkey.bind(ctrl_cmd, "i", function()
+    local win = hs.window.focusedWindow()
+    hs.window.changeHeight(win, false)
+  end)
+
+  hs.hotkey.bind(ctrl_cmd, "m", function()
+    local win = hs.window.focusedWindow()
+    win:maximize()
   end)
 
   --[[hs.hotkey.bind(ctrl_cmd, "k", function()
@@ -226,15 +262,8 @@ function config()
   hs.hotkey.bind(ctrl_alt, "k", function()
     local win = hs.window.focusedWindow()
     hs.window.upRight(win)
-  end)]]--
-
-  hs.hotkey.bind(ctrl_cmd, "m", function()
-    local win = hs.window.focusedWindow()
-    win:maximize()
-    --hs.window.maximize(win)
   end)
 
---[[
   hs.hotkey.bind(ctrl_cmd, "f", function()
     local win = hs.window.focusedWindow()
     if (win) then
@@ -244,7 +273,7 @@ function config()
 
   hs.hotkey.bind(ctrl_cmd, "h", function()
     hs.hints.windowHints()
-  end)]]--
+  end)
 
   hs.hotkey.bind(ctrl_cmd, "k", function()
     local win = hs.window.focusedWindow()
@@ -257,9 +286,9 @@ function config()
     local win = hs.window.focusedWindow()
     if (win) then
       win:moveToScreen(hs.screen.get(main_monitor))
-      --win:maximize()
+      win:maximize()
     end
-  end)
+  end)]]--
 
   hs.hotkey.bind(ctrl_cmd, "R", function()
     hs.reload()
@@ -269,7 +298,7 @@ function config()
 --    local app = win:application()
 --
 --          hs.alert.show(app:title())
---          
+--
   end)
 
   --[[
@@ -516,50 +545,73 @@ function hs.screen.minFrame(refScreen, isFullscreen)
   return result
 end
 
--- +-----------------+
--- |        |        |
--- |        |  HERE  |
--- |        |        |
--- +-----------------+
-function hs.window.right(win)
-  local minFrame = hs.screen.minFrame(win:screen(), false)
-  minFrame.x = minFrame.x + (minFrame.w/2)
-  minFrame.w = minFrame.w/2
-  win:setFrame(minFrame)
+-- by onethird
+function hs.window.changeWidth(win, dec)
+	local frame = win:frame()
+	local incscreenw = win:screen():frame().w/3
+
+	if(dec) then incscreenw = incscreenw*-1 end
+
+	frame.w = frame.w + incscreenw
+
+	if(dec) then
+		frame.w = math.max(frame.x, frame.w)
+	else
+		frame.w = math.min(win:screen():frame().w-frame.x, frame.w)
+	end
+
+	win:setFrame(frame)
 end
 
--- +-----------------+
--- |        |        |
--- |  HERE  |        |
--- |        |        |
--- +-----------------+
-function hs.window.left(win)
-  local minFrame = hs.screen.minFrame(win:screen(), false)
-  minFrame.w = minFrame.w/2
-  win:setFrame(minFrame)
+function hs.window.changeHeight(win, dec)
+	local frame = win:frame()
+	local incscreenh = win:screen():frame().h/3
+
+	if(dec) then incscreenh = incscreenh*-1 end
+
+	frame.h = frame.h + incscreenh
+
+	if(dec) then
+		frame.h = math.max(frame.y, frame.h)
+	else
+		frame.h = math.min(win:screen():frame().h-frame.y+40, frame.h)
+	end
+
+	win:setFrame(frame)
 end
 
--- +-----------------+
--- |      HERE       |
--- +-----------------+
--- |                 |
--- +-----------------+
-function hs.window.up(win)
-  local minFrame = hs.screen.minFrame(win:screen(), false)
-  minFrame.h = minFrame.h/2
-  win:setFrame(minFrame)
+function hs.window.moveHorizontal(win, dec)
+	local frame = win:frame()
+	local incscreenw = win:screen():frame().w/3
+
+	if(dec) then incscreenw = incscreenw*-1 end
+
+	frame.x = frame.x+incscreenw
+
+	if(dec) then
+		frame.x = math.max(0, frame.x)
+	else
+		frame.x = math.min(win:screen():frame().w-frame.w, frame.x)
+	end
+
+	win:setFrame(frame)
 end
 
--- +-----------------+
--- |                 |
--- +-----------------+
--- |      HERE       |
--- +-----------------+
-function hs.window.down(win)
-  local minFrame = hs.screen.minFrame(win:screen(), false)
-  minFrame.y = minFrame.y + minFrame.h/2
-  minFrame.h = minFrame.h/2
-  win:setFrame(minFrame)
+function hs.window.moveVertical(win, dec)
+	local frame = win:frame()
+	local incscreenh = win:screen():frame().h/3
+
+	if(dec) then incscreenh = incscreenh*-1 end
+
+	frame.y = frame.y+incscreenh
+
+	if(dec) then
+		frame.y = math.max(0, frame.y)
+	else
+		frame.y = math.min(win:screen():frame().h-frame.h+40, frame.y)
+	end
+
+	win:setFrame(frame)
 end
 
 -- +-----------------+
@@ -718,6 +770,7 @@ end
 
 
 --require('keyboard.panes')
+require('keyboard.spaces')
 config()
 --appWatcher = hs.application.watcher.new(applicationWatcher)
 --appWatcher:start()

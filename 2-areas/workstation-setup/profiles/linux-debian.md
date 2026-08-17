@@ -45,6 +45,10 @@ From [`references/config-sources.md`](../references/config-sources.md), the Linu
 
 The remaining mappings use the same `$HOME`-relative destinations on Linux as on macOS, but they are **not all symlinks** — see [`references/config-sources.md`](../references/config-sources.md) for the mode definitions. Bootstrap installs the Oh My Zsh framework and its custom plugins, links `.zshrc`, `.zshrc.work` and `.local/bin/herdr-title-watch` for the `work` profile, `.bashrc`, `.tmux.conf`, `.vimrc`, the kickstart.nvim `lua/custom/` overlay, `.kubectlAliases`, and non-secret GitHub CLI `config.yml` preferences. It also installs Vundle and runs Vim's declared plugin installation. Bootstrap clones kickstart.nvim when absent and applies the versioned `nvim-custom/kickstart.patch` before linking the overlay. Work-only aliases, ETL variables, Devbox/Pedregal helpers, AWS profile selection, and Herdr hooks stay in `.zshrc.work`; authentication, sessions, caches, and machine-specific state remain excluded.
 
+## Neovim runtime compatibility
+
+The Debian/Ubuntu `apt` candidate may lag the Neovim API required by the current Kickstart baseline and custom plugin overlay. Neovim `0.12` or newer is required for the baseline's `vim.pack`/`PackChanged` usage and the stored overlay's `vim.pack.add` modules. Use [`How to Upgrade Neovim`](../docs/how-to/neovim-upgrade.md) when `apt-cache policy neovim` reports an older candidate; the guide includes both the package-managed path and a user-local tarball fallback.
+
 ## Mobile tooling on Linux
 
 
