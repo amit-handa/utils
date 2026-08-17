@@ -1,6 +1,4 @@
 [user]
-	email = amit.handa@doordash.com
-	name = amit handa
 [push]
 	default = simple
 [core]
@@ -14,8 +12,6 @@
 #	deltaCacheSize = 2048m
 #	packSizeLimit = 4096m
 #	windowMemory = 4096m
-[credential]
-	helper = osxkeychain
 [branch]
 	autosetuprebase = always
 [filter "lfs"]
@@ -25,15 +21,8 @@
 	required = true
 [hub]
 	protocol = https
-[credential "https://github.com/doordash"]
-	helper = 
-	helper = !/opt/homebrew/bin/gh auth git-credential
-
-[credential "https://github.com/amit-handda"]
-	helper = 
-	helper = !/opt/homebrew/bin/gh auth git-credential
-[credential "https://gist.github.com/amit-handda"]
-	helper = 
-	helper = !/opt/homebrew/bin/gh auth git-credential
 [http]
 	postBuffer = 524288000
+
+[include]
+    path = ~/.gitconfig.local
